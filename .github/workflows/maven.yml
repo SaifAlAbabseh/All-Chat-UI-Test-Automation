@@ -38,7 +38,7 @@ jobs:
 
     - name: Notify slack
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       uses: pullreminders/slack-action@master
       with:
         args: '{\"channel\":\"C05R1CXD2Q4\",\"text\":\"Test Status: ${{ job.status }}\"}'
