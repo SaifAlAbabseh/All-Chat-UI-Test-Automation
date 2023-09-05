@@ -44,11 +44,6 @@ jobs:
 
     - name: Run TestNG Tests
       run: |
-        echo "mix-compile--warnings-as-errors=$(mix compile --warnings-as-errors)\n" >> $GITHUB_OUTPUT
-        echo "mix-format--check-formatted=$(mix format --check-formatted)\n" >> $GITHUB_OUTPUT
-        echo "mix-ecto_create=$(mix ecto.create)\n" >> $GITHUB_OUTPUT
-        echo "mix-ecto_migrate=$(mix ecto.migrate)\n" >> $GITHUB_OUTPUT
-        echo "mix-test=$(mix test)\n" >> $GITHUB_OUTPUT
         mvn test -DsuiteXmlFile=test-output/testng.xml
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       continue-on-error: true
@@ -59,6 +54,12 @@ jobs:
       with:
         name: test-reports
         path: test-output/testng-results.xml
+
+    - name: Get Test Results
+      id: test-results
+      run: |
+        test_results=$(grep -o 'Tests run: [0-9]*, Failures: [0-9]*, Errors: [0-9]*, Skipped: [0-9]*' ./testng-results.xml)
+        echo "::set-output name=test_results::$test_results"
 
     - name: Post to a Slack channel
       id: slack
@@ -73,7 +74,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: ${{join(steps.run-tests.outputs.*, '\n')}}\nTests passed: ${{ steps.run-tests.outputs.num_passed }}\nTests failed: ${{ steps.run-tests.outputs.num_failed }}"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: ${{ steps.test-results.outputs.test_results }}\nTests passed: ${{ steps.run-tests.outputs.num_passed }}\nTests failed: ${{ steps.run-tests.outputs.num_failed }}"
                 }
               }
             ]
