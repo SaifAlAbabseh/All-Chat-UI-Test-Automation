@@ -31,12 +31,7 @@ jobs:
         cache: maven
 
     - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
+      uses: actions/checkout@v3
         
     - name: Build with Maven
       run: mvn -B package --file pom.xml
@@ -53,10 +48,10 @@ jobs:
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       
     - name: Upload TestNG Reports
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: test-reports
-        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output
+        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output/
 
     - name: Post to a Slack channel
       id: slack
