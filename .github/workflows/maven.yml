@@ -68,7 +68,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: ${{ steps.parse-test-report.outputs.num_tests }}\nTests passed: ${{ steps.parse-test-report.outputs.num_passed }}\nTests failed: ${{ steps.parse-test-report.outputs.num_failed }}"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: ${{ steps.run-tests.outputs.* }}\nTests passed: ${{ steps.run-tests.outputs.num_passed }}\nTests failed: ${{ steps.run-tests.outputs.num_failed }}"
                 }
               }
             ]
