@@ -41,4 +41,4 @@ jobs:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       uses: pullreminders/slack-action@master
       with:
-        args: '{\"channel\":\"C05R1CXD2Q4\",\"text\":\"Test Status: ${{ job.status }}\"}'
+        args: '{\"channel\":\"C05R1CXD2Q4\",\"text\":\"Test Status: ${{ job.status }}\n Tests Ran: ${{ steps.parse-test-report.outputs.num_tests }}\nTests Passed: ${{ steps.parse-test-report.outputs.num_passed }}\nTests Failed: ${{ steps.parse-test-report.outputs.num_failed }}\"}'
