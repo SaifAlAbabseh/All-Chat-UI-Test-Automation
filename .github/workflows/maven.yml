@@ -39,13 +39,13 @@ jobs:
     - name: Run TestNG Tests
       run: |
         mvn test -DsuiteXmlFile=testng.xml
-      working-directory: All-Chat-UI-Test-Automation
-
+      working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
+      
     - name: Upload TestNG Reports
       uses: actions/upload-artifact@v2
       with:
         name: test-reports
-        path: All-Chat-UI-Test-Automation/test-output
+        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output
 
     - name: Post to a Slack channel
       id: slack
