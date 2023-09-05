@@ -41,6 +41,4 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       uses: pullreminders/slack-action@master
       with:
-        status: ${{ job.status }}
-        channel: 'C05R1CXD2Q4'
-        text: 'Test Status'
+        args: '{\"channel\":\"C05R1CXD2Q4\",\"text\":\"Test Status: ${{ job.status }}\"}'
