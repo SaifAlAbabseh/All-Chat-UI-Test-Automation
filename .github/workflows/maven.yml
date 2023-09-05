@@ -44,6 +44,11 @@ jobs:
 
     - name: Run TestNG Tests
       run: |
+        echo "mix-compile--warnings-as-errors=$(mix compile --warnings-as-errors)\n" >> $GITHUB_OUTPUT
+        echo "mix-format--check-formatted=$(mix format --check-formatted)\n" >> $GITHUB_OUTPUT
+        echo "mix-ecto_create=$(mix ecto.create)\n" >> $GITHUB_OUTPUT
+        echo "mix-ecto_migrate=$(mix ecto.migrate)\n" >> $GITHUB_OUTPUT
+        echo "mix-test=$(mix test)\n" >> $GITHUB_OUTPUT
         mvn test -DsuiteXmlFile=test-output/testng.xml
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       continue-on-error: true
