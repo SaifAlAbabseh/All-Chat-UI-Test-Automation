@@ -8,8 +8,7 @@ public class Driver {
     public static WebDriver driver;
 
     public Driver() {
-        //setOptions(new String[] {"--headless"})
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(setOptions(new String[] {"--headless"}));
         driver.manage().window().maximize();
     }
 
