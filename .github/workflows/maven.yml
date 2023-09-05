@@ -48,18 +48,13 @@ jobs:
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       continue-on-error: true
       id: run-tests
-      
-    - name: Upload TestNG Reports
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-reports
-        path: test-output/testng-results.xml
 
-    - name: Get Test Results
-      id: test-results
+    - name: Save Test Results
       run: |
-        test_results=$(grep -o 'Tests run: [0-9]*, Failures: [0-9]*, Errors: [0-9]*, Skipped: [0-9]*' ./testng-results.xml)
-        echo "::set-output name=test_results::$test_results"
+        mkdir -p testng-reports
+        cp -r target/surefire-reports/* testng-reports/
+        mvn surefire-report:report -DoutputDirectory=testng-reports/
+        grep -o 'Tests run: [0-9]*, Failures: [0-9]*, Errors: [0-9]*, Skipped: [0-9]*' testng-reports/emailable-report.html > testng-results.txt
 
     - name: Post to a Slack channel
       id: slack
@@ -74,7 +69,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: ${{ steps.test-results.outputs.test_results }}\nTests passed: ${{ steps.run-tests.outputs.num_passed }}\nTests failed: ${{ steps.run-tests.outputs.num_failed }}"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: $(cat testng-results.txt)\nTests passed: ${{ steps.run-tests.outputs.num_passed }}\nTests failed: ${{ steps.run-tests.outputs.num_failed }}"
                 }
               }
             ]
