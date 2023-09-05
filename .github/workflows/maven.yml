@@ -53,7 +53,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: test-reports
-        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output/testing-results.xml
+        path: test-output/testng-results.xml
 
     - name: Post to a Slack channel
       id: slack
