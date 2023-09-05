@@ -62,13 +62,13 @@ jobs:
         channel-id: 'automation-jobs'
         payload: |
           {
-            "text": "Nightly tests result: ${{ steps.run-tests.outcome }}",
+            "text": "Tests Result: ${{ steps.run-tests.outcome }}",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Saif's test. Please ignore\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: ${{ steps.parse-test-report.outputs.num_tests }}\nTests passed: ${{ steps.parse-test-report.outputs.num_passed }}\nTests failed: ${{ steps.parse-test-report.outputs.num_failed }}"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: ${{ steps.parse-test-report.outputs.num_tests }}\nTests passed: ${{ steps.parse-test-report.outputs.num_passed }}\nTests failed: ${{ steps.parse-test-report.outputs.num_failed }}"
                 }
               }
             ]
