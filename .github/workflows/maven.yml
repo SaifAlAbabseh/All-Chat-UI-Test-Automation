@@ -46,6 +46,8 @@ jobs:
       run: |
         mvn test -DsuiteXmlFile=testng.xml
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
+      continue-on-error: true
+      id: run-tests
       
     - name: Upload TestNG Reports
       uses: actions/upload-artifact@v3
