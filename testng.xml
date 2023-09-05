@@ -5,4 +5,7 @@
             <class name="AllChatTest.MainTest"/>
         </classes>
     </test>
+    <listeners>
+        <listener class-name="org.testng.reporters.XMLReporter" />
+    </listeners>
 </suite>
