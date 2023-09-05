@@ -44,7 +44,7 @@ jobs:
 
     - name: Run TestNG Tests
       run: |
-        mvn test -DsuiteXmlFile=testng.xml
+        mvn test -DsuiteXmlFile=test-output/testng.xml
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       continue-on-error: true
       id: run-tests
