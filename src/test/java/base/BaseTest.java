@@ -9,6 +9,7 @@ public class BaseTest {
     @BeforeClass
     public void initDriver() {
         new Driver();
+        Driver.driver.get("https://all-chat.000webhostapp.com/");
     }
 
     @AfterClass
