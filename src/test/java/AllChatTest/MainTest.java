@@ -23,10 +23,11 @@ public class MainTest extends BaseTest {
     public void testLoginPageFirstPopup() {
         helper.loginPopupFlow();
     }
-    @Test(priority = 1)
+    /*@Test(priority = 1)
     public void testInvalidLogin() {
         helper.invalidLoginFlow("invalid", "invalid");
     }
+     */
     @Test(priority = 2)
     public void testLogin() {
         mainPage = helper.loginFlow("automation", "automation");

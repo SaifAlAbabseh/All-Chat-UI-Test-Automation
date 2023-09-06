@@ -4,6 +4,7 @@ import config.Driver;
 import config.Page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -28,6 +29,8 @@ public class MainPage extends Page {
     }
 
     public void clickOnLogoutButton() {
+        wait = new WebDriverWait(Driver.driver, Duration.ofSeconds(6));
+        wait.until(ExpectedConditions.elementToBeClickable(logoutButton));
         WebElement logoutButtonElement = Driver.driver.findElement(logoutButton);
         logoutButtonElement.click();
     }
