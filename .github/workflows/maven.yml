@@ -49,13 +49,6 @@ jobs:
       continue-on-error: true
       id: run-tests
 
-    - name: Save Test Results
-      run: |
-        mkdir -p testng-reports
-        cp -r target/surefire-reports/* testng-reports/
-        mvn surefire-report:report -DoutputDirectory=testng-reports/
-        grep -o 'Tests run: [0-9]*, Failures: [0-9]*, Errors: [0-9]*, Skipped: [0-9]*' testng-reports/emailable-report.html > testng-results.txt
-
     - name: Post to a Slack channel
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
@@ -69,7 +62,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\nTests ran: $(cat testng-results.txt)\nTests passed: ${{ steps.run-tests.outputs.num_passed }}\nTests failed: ${{ steps.run-tests.outputs.num_failed }}"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n@Saif AlAbabseh"
                 }
               }
             ]
