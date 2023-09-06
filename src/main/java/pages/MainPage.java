@@ -13,7 +13,7 @@ public class MainPage extends Page {
 
     private By groupsLabel = By.xpath("//*[contains(., 'Groups')]"),
                             friendsLabel = By.xpath("//*[contains(., 'Your Friends')]"),
-                            logoutButton = By.xpath("//button[contains(., 'Logoutt')]");
+                            logoutButton = By.xpath("//button[contains(., 'Logout')]");
 
     private LoginPage loginPage = new LoginPage();
     private WebDriverWait wait;
