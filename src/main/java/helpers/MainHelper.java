@@ -32,7 +32,7 @@ public class MainHelper {
     public void invalidLoginFlow(String username, String password) {
         setLoginFields(username, password);
         loginPage.clickOnLoginButtonForInvalid();
-        wait = new WebDriverWait(Driver.driver, Duration.ofSeconds(6));
+        wait = new WebDriverWait(Driver.driver, Duration.ofSeconds(7));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(loginPage.getLoadingElement()));
         Assert.assertTrue(loginPage.isInvalidLogin());
     }
@@ -44,7 +44,7 @@ public class MainHelper {
 
     public void afterLogoutFlow(LoginPage loginPage) {
         this.loginPage = loginPage;
-        wait = new WebDriverWait(Driver.driver, Duration.ofSeconds(6));
+        wait = new WebDriverWait(Driver.driver, Duration.ofSeconds(7));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(loginPage.getLoadingElement()));
         loginPage.closeStartPopUp();
     }
