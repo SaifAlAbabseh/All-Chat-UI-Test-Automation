@@ -1,61 +1,37 @@
 package pages;
 
-import config.Driver;
-import config.Page;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import java.util.List;
+import utils.Page;
 
 public class LoginPage extends Page {
 
-    private By popUpModalExitButton = By.id("exit"),
-                                    usernameField = By.id("username_inputfield"),
-                                    passwordField = By.id("userpassword_field"),
-                                    loginButton = By.id("login_buttontag"),
-                                    invalidLoginLabel = By.id("invalidforlogin"),
-                                    popUpElements = By.className("otherPlatformDownloadLink"),
-                                    loadingElement = By.id("loading_box_outer_id");
+    private final By popUpExitButton = By.id("exit"),
+               usernameInputField = By.id("username_inputfield"),
+               passwordInputField = By.id("userpassword_field"),
+               loginButton = By.id("login_buttontag");
 
-
-    public List<WebElement> getPopupElements() {
-        return Driver.driver.findElements(popUpElements);
-    }
-    public void closeStartPopUp() {
-        Driver.driver.findElement(popUpModalExitButton).click();
-    }
-    public void setUsername(String username) {
-        Driver.driver.findElement(usernameField).sendKeys(username);
-    }
-    public void setPassword(String password) {
-        Driver.driver.findElement(passwordField).sendKeys(password);
+    public void navigateToLoginPage(String URL) {
+        visit(URL);
     }
 
-    public boolean isInvalidLogin() {
-        return Driver.driver.findElement(invalidLoginLabel).isDisplayed();
+    public String getLoginPageTitle() {
+        return getPageTitle();
     }
 
-    public void clickOnLoginButtonForInvalid() {
-        Driver.driver.findElement(loginButton).click();
+    public void clickOnPopUpExitButton() {
+        findElementBy(popUpExitButton).click();
+    }
+
+    public void setUsernameField(String username) {
+        findElementBy(usernameInputField).sendKeys(username);
+    }
+
+    public void setPasswordField(String password) {
+        findElementBy(passwordInputField).sendKeys(password);
     }
 
     public MainPage clickOnLoginButton() {
-        Driver.driver.findElement(loginButton).click();
+        findElementBy(loginButton).click();
         return new MainPage();
-    }
-
-    public By getPopUpModalExitButton() {
-        return popUpModalExitButton;
-    }
-
-    public By getInvalidLoginLabel() {
-        return invalidLoginLabel;
-    }
-
-    public By getLoginButton() {
-        return loginButton;
-    }
-
-    public By getLoadingElement() {
-        return loadingElement;
     }
 }

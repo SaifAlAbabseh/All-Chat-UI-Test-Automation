@@ -1,8 +1,37 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="MyTestSuite">
-    <test name="MyTestCase">
+<suite name="All Chat Test Suite">
+    <test name="All Chat Test on Chrome">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="mobile" value="false"/>
         <classes>
-            <class name="AllChatTest.MainTest"/>
+            <class name="tests.MainTest">
+            </class>
+        </classes>
+    </test>
+    <test name="All Chat Test on Chrome Mobile">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="mobile" value="true"/>
+        <classes>
+            <class name="tests.MainTest">
+            </class>
+        </classes>
+    </test>
+    <!--
+    <test name="All Chat Test on Firefox">
+        <parameter name="browser" value="firefox"/>
+        <parameter name="mobile" value="false"/>
+        <classes>
+            <class name="tests.MainTest">
+            </class>
+        </classes>
+    </test>
+    -->
+    <test name="All Chat Test on Edge">
+        <parameter name="browser" value="edge"/>
+        <parameter name="mobile" value="false"/>
+        <classes>
+            <class name="tests.MainTest">
+            </class>
         </classes>
     </test>
     <listeners>

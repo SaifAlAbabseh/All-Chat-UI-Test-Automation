@@ -13,8 +13,8 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  schedule:
-    - cron: '0 0 * * *'
+  #schedule:
+  #  - cron: '0 0 * * *'
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
 
     - name: Run TestNG Tests
       run: |
-        mvn test -DsuiteXmlFile=test-output/testng.xml
+        mvn test -DsuiteXmlFile=testng.xml
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
 

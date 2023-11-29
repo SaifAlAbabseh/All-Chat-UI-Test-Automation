@@ -1,45 +1,42 @@
 package pages;
 
-import config.Driver;
-import config.Page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
+import utils.Page;
 
 public class MainPage extends Page {
 
-    private By groupsLabel = By.xpath("//*[contains(., 'Groups')]"),
-                            friendsLabel = By.xpath("//*[contains(., 'Your Friends')]"),
-                            logoutButton = By.xpath("//button[contains(., 'Logout')]");
+    private By loadingBox = By.id("loading_box_outer_id"),
+               addNewFriendLink = By.id("addLink"),
+               editProfileLink = By.id("editLink"),
+               usernameLabel = By.xpath("//div[@class='profileBox']/h2[@style='color:yellow']"),
+               menuIcon = By.id("m");
 
-    private LoginPage loginPage = new LoginPage();
-    private WebDriverWait wait;
-
-    public boolean isGroupsLabelVisible() {
-        WebElement groupsLabelElement = Driver.driver.findElement(groupsLabel);
-        return groupsLabelElement.isDisplayed();
+    public By getLoadingBox() {
+        return loadingBox;
     }
 
-    public boolean isFriendsLabelVisible() {
-        WebElement friendsLabelElement = Driver.driver.findElement(friendsLabel);
-        return friendsLabelElement.isDisplayed();
+    public WebElement getAddNewFriendLink() {
+        return findElementBy(addNewFriendLink);
     }
 
-    public void clickOnLogoutButton() {
-        wait = new WebDriverWait(Driver.driver, Duration.ofSeconds(6));
-        wait.until(ExpectedConditions.elementToBeClickable(logoutButton));
-        WebElement logoutButtonElement = Driver.driver.findElement(logoutButton);
-        logoutButtonElement.click();
+    public By getAddNewFriendLink2() {
+        return addNewFriendLink;
     }
 
-    public By getGroupsLabel() {
-        return groupsLabel;
+    public WebElement getEditProfileLink() {
+        return findElementBy(editProfileLink);
     }
 
-    public By getLogoutButton() {
-        return logoutButton;
+    public WebElement getUsernameLabel() {
+        return findElementBy(usernameLabel);
+    }
+
+    public boolean isMenuDisplayed() {
+        return findElementBy(menuIcon).isDisplayed();
+    }
+
+    public void clickOnMenu() {
+        findElementBy(menuIcon).click();
     }
 }
