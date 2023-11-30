@@ -39,6 +39,12 @@ jobs:
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
 
+    - name: Archive Screenshots Directory
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshots
+        path: src/main/screenshots
+
     - name: Post to a Slack channel
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
