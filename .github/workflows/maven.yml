@@ -50,13 +50,8 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: XML test report
-        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output/**
-
-    - name: Download TestNG XML report
-      uses: actions/download-artifact@v3
-      with:
-        name: testng-results
-
+        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output/testng-results.xml
+        
     - name: Post to a Slack channel
       if: always()
       id: slack
