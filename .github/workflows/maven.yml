@@ -77,4 +77,3 @@ jobs:
           }
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        TOTAL_TEST_CASES: ${{ env.TOTAL_TEST_CASES }}
