@@ -45,6 +45,18 @@ jobs:
         name: screenshots
         path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
 
+    - name: Upload XML testng report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: XML test report
+        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output/**
+
+    - name: Download TestNG XML report
+      uses: actions/download-artifact@v3
+      with:
+        name: testng-results
+
     - name: Post to a Slack channel
       if: always()
       id: slack
@@ -59,7 +71,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nTotal Test Cases: $(xmllint --xpath "count(//test)" testng-results.xml)\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
                 }
               }
             ]
