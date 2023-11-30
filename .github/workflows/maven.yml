@@ -39,11 +39,10 @@ jobs:
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
 
-    - name: Archive Screenshots Directory
-      uses: actions/upload-artifact@v3
-      with:
-        name: screenshots
-        path: src/main/screenshots
+    - name: Move Files to Repo
+      run: |
+        # Move files from /home/runner to the repository directory
+        mv /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots ./src/main/screenshots
 
     - name: Post to a Slack channel
       id: slack
