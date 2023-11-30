@@ -38,7 +38,7 @@ jobs:
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
 
-    - name: Upload artifact
+    - name: Upload screenshots of the failed tests
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
       with:
@@ -46,7 +46,7 @@ jobs:
         path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
 
     - name: Post to a Slack channel
-      if: ${{ failure() }}
+      if: always()
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
       with:
