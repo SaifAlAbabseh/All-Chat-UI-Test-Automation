@@ -28,7 +28,6 @@ public class TestBase {
     @AfterMethod(description = "Take a screenshot for every failed test case")
     public void createScreenshotOnFailure(ITestResult result, Method method, String browser, boolean mobile) {
         if(!result.isSuccess()) {
-            System.out.println("SaifSaifSaifSaifSaif");
             String whichPlatform = (mobile)?"mobile view":"desktop view";
             ScreenActions.takeScreenshot(browser, whichPlatform, method.getName());
         }
