@@ -49,6 +49,12 @@ jobs:
       if: always()
       run: |
         mv target/surefire-reports/testng-results.xml ${{ github.workspace }}/testng-results.xml
+
+    - name: Get total test cases
+      if: always()
+      id: total-test-cases
+      run: |
+        echo "TOTAL_TEST_CASES=$(xmllint --xpath 'count(//test)' \"${GITHUB_WORKSPACE}/testng-results.xml\")" >> $GITHUB_ENV
         
     - name: Post to a Slack channel
       if: always()
@@ -71,4 +77,4 @@ jobs:
           }
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        TOTAL_TEST_CASES: ${{ runner.commandLine('echo "$(xmllint --xpath count(//test) \'${GITHUB_WORKSPACE}/testng-results.xml\')"') }}
+        TOTAL_TEST_CASES: ${{ env.TOTAL_TEST_CASES }}
