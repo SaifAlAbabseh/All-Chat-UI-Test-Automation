@@ -54,8 +54,6 @@ jobs:
       if: always()
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
-      env:
-        TOTAL_TEST_CASES: ${{ runner.commandLine 'echo "$(xmllint --xpath count(//test)' }}
       with:
         channel-id: 'automation-jobs'
         payload: |
@@ -73,3 +71,4 @@ jobs:
           }
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        TOTAL_TEST_CASES: ${{ runner.commandLine('echo "$(xmllint --xpath count(//test) \'${GITHUB_WORKSPACE}/testng-results.xml\')"') }}
