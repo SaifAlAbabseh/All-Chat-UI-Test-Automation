@@ -8,6 +8,7 @@ import pages.LoginPage;
 import pages.MainPage;
 import utils.Driver;
 
+import java.lang.reflect.Method;
 import java.time.Duration;
 
 import static org.testng.Assert.*;

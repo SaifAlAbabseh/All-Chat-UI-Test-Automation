@@ -3,38 +3,46 @@
     <test name="All Chat Test on Chrome">
         <parameter name="browser" value="chrome"/>
         <parameter name="mobile" value="false"/>
+        <parameter name="includeAudio" value="false"/>
         <classes>
             <class name="tests.MainTest">
             </class>
         </classes>
     </test>
+
     <test name="All Chat Test on Chrome Mobile">
         <parameter name="browser" value="chrome"/>
         <parameter name="mobile" value="true"/>
+        <parameter name="includeAudio" value="false"/>
         <classes>
             <class name="tests.MainTest">
             </class>
         </classes>
     </test>
-    <!--
+
     <test name="All Chat Test on Firefox">
         <parameter name="browser" value="firefox"/>
         <parameter name="mobile" value="false"/>
+        <parameter name="includeAudio" value="false"/>
         <classes>
             <class name="tests.MainTest">
             </class>
         </classes>
     </test>
-    -->
+
     <test name="All Chat Test on Edge">
         <parameter name="browser" value="edge"/>
         <parameter name="mobile" value="false"/>
+        <parameter name="includeAudio" value="false"/>
         <classes>
             <class name="tests.MainTest">
             </class>
         </classes>
     </test>
+
+    <!--
     <listeners>
         <listener class-name="org.testng.reporters.XMLReporter" />
     </listeners>
+    -->
 </suite>

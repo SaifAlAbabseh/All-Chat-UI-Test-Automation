@@ -33,12 +33,8 @@ public class Driver {
             options.addArguments("--headless");
             driver = new EdgeDriver(options);
         }
-        if(mobileMode) {
-            driver.manage().window().setSize(new Dimension(500, 900));
-        }
-        else {
-            driver.manage().window().maximize();
-        }
+        Dimension windowSize = (mobileMode)?new Dimension(500, 900):new Dimension(1920, 1080);
+        driver.manage().window().setSize(windowSize);
     }
     public static WebDriver getDriver() {
         return driver;
