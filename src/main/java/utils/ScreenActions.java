@@ -16,11 +16,10 @@ public class ScreenActions {
     public static void takeScreenshot(String browserName, String whichPlatform, String testCaseName) {
         File file = ((TakesScreenshot)Driver.getDriver()).getScreenshotAs(OutputType.FILE);
         try {
-            System.out.println("SaifSaifSaifSaifSaif");
             FileUtils.copyFile(file, new File("src/main/screenshots/" + browserName + "-" + whichPlatform + "-" + testCaseName + ".png"));
-            System.out.println("SaifSaifSaifSaifSaif");
+            File f = new File("src/main/screenshots/" + browserName + "-" + whichPlatform + "-" + testCaseName + ".png");
+            System.out.println(f.getAbsolutePath());
         } catch (IOException e) {
-            System.out.println("failure");
             e.printStackTrace();
         }
     }
