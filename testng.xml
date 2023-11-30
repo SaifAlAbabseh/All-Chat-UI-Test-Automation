@@ -10,7 +10,6 @@
         </classes>
     </test>
 
-    <!--
     <test name="All Chat Test on Chrome Mobile">
         <parameter name="browser" value="chrome"/>
         <parameter name="mobile" value="true"/>
@@ -40,7 +39,6 @@
             </class>
         </classes>
     </test>
-    -->
 
     <!--
     <listeners>

@@ -17,8 +17,6 @@ public class ScreenActions {
         File file = ((TakesScreenshot)Driver.getDriver()).getScreenshotAs(OutputType.FILE);
         try {
             FileUtils.copyFile(file, new File("src/main/screenshots/" + browserName + "-" + whichPlatform + "-" + testCaseName + ".png"));
-            File f = new File("src/main/screenshots/" + browserName + "-" + whichPlatform + "-" + testCaseName + ".png");
-            System.out.println(f.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }
