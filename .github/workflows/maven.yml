@@ -38,6 +38,13 @@ jobs:
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
 
+    - name: Upload artifact
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: screenshots
+        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
+
     - name: Post to a Slack channel
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
@@ -58,24 +65,3 @@ jobs:
           }
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-    
-
-  move_files:
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
-          
-        - name: Move Files to Repo
-          run: |
-            # Move files from /home/runner to the repository directory
-            mv /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots ./src/main/screenshots
-  
-        - name: Commit and Push Changes
-          run: |
-            git config --global user.email "actions@github.com"
-            git config --global user.name "GitHub Actions"
-            git add .
-            git commit -m "Move files from /home/runner to the repository"
-            git push
