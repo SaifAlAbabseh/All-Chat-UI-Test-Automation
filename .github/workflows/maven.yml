@@ -60,10 +60,10 @@ jobs:
       id: test-report-values
       run: |
         XML_FILE="target/surefire-reports/testng-results.xml"
-        NUM_TESTS=$(xmllint --xpath 'string(//testng-results/@total)' $xml_file)
-        NUM_PASSED_TESTS=$(xmllint --xpath 'string(//testng-results/@passed)' $xml_file)
-        NUM_FAILED_TESTS=$(xmllint --xpath 'string(//testng-results/@failed)' $xml_file)
-        NUM_SKIPPED_TESTS=$(xmllint --xpath 'string(//testng-results/@skipped)' $xml_file)
+        NUM_TESTS=$(xmllint --xpath 'string(//testng-results/@total)' $XML_FILE)
+        NUM_PASSED_TESTS=$(xmllint --xpath 'string(//testng-results/@passed)' $XML_FILE)
+        NUM_FAILED_TESTS=$(xmllint --xpath 'string(//testng-results/@failed)' $XML_FILE)
+        NUM_SKIPPED_TESTS=$(xmllint --xpath 'string(//testng-results/@skipped)' $XML_FILE)
         echo "num_tests=$NUM_TESTS" >> $GITHUB_OUTPUT
         echo "num_passed_tests=$NUM_PASSED_TESTS" >> $GITHUB_OUTPUT
         echo "num_failed_tests=$NUM_FAILED_TESTS" >> $GITHUB_OUTPUT
