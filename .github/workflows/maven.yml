@@ -48,7 +48,14 @@ jobs:
     - name: Save TestNG XML report
       if: always()
       run: |
-        mv target/surefire-reports/testng-results.xml ${{ github.workspace }}/testng-results.xml
+        mv target/surefire-reports/testng-results.xml ${{ github.workspace }}/test-output/testng-results.xml
+
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test report
+        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output/testng-results.xml
 
     - name: Get total test cases
       if: always()
