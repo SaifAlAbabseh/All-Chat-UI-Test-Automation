@@ -45,23 +45,12 @@ jobs:
         name: screenshots
         path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
 
-    - name: Save TestNG XML report
-      if: always()
-      run: |
-        mv target/surefire-reports/testng-results.xml ${{ github.workspace }}/test-output/testng-results.xml
-
     - name: Upload test report
       if: always()
       uses: actions/upload-artifact@v3
       with:
         name: test report
-        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/test-output/testng-results.xml
-
-    - name: Get total test cases
-      if: always()
-      id: total-test-cases
-      run: |
-        echo "TOTAL_TEST_CASES=$(xmllint --xpath 'count(//test)' \"${GITHUB_WORKSPACE}/testng-results.xml\")" >> $GITHUB_ENV
+        path: target/surefire-reports/testng-results.xml
         
     - name: Post to a Slack channel
       if: always()
@@ -77,7 +66,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nTotal Test Cases: ${{ env.TOTAL_TEST_CASES }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
                 }
               }
             ]
