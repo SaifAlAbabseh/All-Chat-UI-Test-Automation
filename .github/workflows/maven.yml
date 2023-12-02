@@ -42,14 +42,14 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
       with:
-        name: screenshots
+        name: Screenshots of failed tests
         path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
 
     - name: Upload Test Report
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: test report
+        name: Test Report
         path: target/surefire-reports/**
         
     - name: Post to a Slack Channel
