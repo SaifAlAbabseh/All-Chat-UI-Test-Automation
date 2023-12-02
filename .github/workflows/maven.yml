@@ -83,7 +83,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome == 'success' && ':white_check_mark:' || ':x:' }} ${{ steps.run-tests.outcome }}\n\nTotal Tests: ${{ steps.test-report-values.outputs.num_tests }}\n${{ ':white_check_mark:' }} Passed Tests: ${{ steps.test-report-values.outputs.num_passed_tests }}\n${{ ':x:' }} Failed Tests: ${{ steps.test-report-values.outputs.num_failed_tests }}\n${{ ':fast_forward:' }} Skipped Tests: ${{ steps.test-report-values.outputs.num_skipped_tests }}\n\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n<@U05R1CUTPBN>"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome == 'success' && ':white_check_mark:' || ':x:' }} ${{ steps.run-tests.outcome }}\n#########################\nTotal Tests: ${{ steps.test-report-values.outputs.num_tests }}\n${{ ':white_check_mark:' }} Passed Tests: ${{ steps.test-report-values.outputs.num_passed_tests }}\n${{ ':x:' }} Failed Tests: ${{ steps.test-report-values.outputs.num_failed_tests }}\n${{ ':fast_forward:' }} Skipped Tests: ${{ steps.test-report-values.outputs.num_skipped_tests }}\n#########################\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n<@U05R1CUTPBN>"
                 }
               }
             ]
