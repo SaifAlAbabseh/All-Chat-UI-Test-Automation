@@ -51,6 +51,20 @@ jobs:
       with:
         name: Test Report
         path: target/surefire-reports/**
+
+    - name: Get Test Result Values from XML Report
+      if: ${{ success() }}
+      id: test-report-values
+      run: |
+        XML_FILE="target/surefire-reports/testng-results.xml"
+        NUM_TESTS=$(xmllint --xpath 'string(//testng-results/@total)' $xml_file)
+        NUM_PASSED_TESTS=$(xmllint --xpath 'string(//testng-results/@passed)' $xml_file)
+        NUM_FAILED_TESTS=$(xmllint --xpath 'string(//testng-results/@failed)' $xml_file)
+        NUM_SKIPPED_TESTS=$(xmllint --xpath 'string(//testng-results/@skipped)' $xml_file)
+        echo "num_tests=$NUM_TESTS" >> $GITHUB_OUTPUT
+        echo "num_passed_tests=$NUM_PASSED_TESTS" >> $GITHUB_OUTPUT
+        echo "num_failed_tests=$NUM_FAILED_TESTS" >> $GITHUB_OUTPUT
+        echo "num_skipped_tests=$NUM_SKIPPED_TESTS" >> $GITHUB_OUTPUT
         
     - name: Post to a Slack Channel
       if: always()
@@ -66,7 +80,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nTotal Tests: ${{ steps.test-report-values.outputs.num_tests }}\nPassed Tests: ${{ steps.test-report-values.outputs.num_passed_tests }}\Failed Tests: ${{ steps.test-report-values.outputs.num_failed_tests }}\Skipped Tests: ${{ steps.test-report-values.outputs.num_skipped_tests }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
                 }
               }
             ]
