@@ -83,7 +83,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nTotal Tests: ${{ steps.test-report-values.outputs.num_tests }}\nPassed Tests: ${{ steps.test-report-values.outputs.num_passed_tests }}\Failed Tests: ${{ steps.test-report-values.outputs.num_failed_tests }}\Skipped Tests: ${{ steps.test-report-values.outputs.num_skipped_tests }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
+                  "text": "Tests Result: ${{ steps.run-tests.outcome }}\nTotal Tests: ${{ steps.test-report-values.outputs.num_tests }}\nPassed Tests: ${{ steps.test-report-values.outputs.num_passed_tests }}\nFailed Tests: ${{ steps.test-report-values.outputs.num_failed_tests }}\nSkipped Tests: ${{ steps.test-report-values.outputs.num_skipped_tests }}\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n<@U05R1CUTPBN>"
                 }
               }
             ]
