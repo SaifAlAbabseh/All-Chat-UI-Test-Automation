@@ -52,6 +52,9 @@ jobs:
         name: Test Report
         path: target/surefire-reports/**
 
+    - name: Install libxml2-utils
+      run: sudo apt-get install -y libxml2-utils
+
     - name: Get Test Result Values from XML Report
       if: ${{ success() }}
       id: test-report-values
