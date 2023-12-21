@@ -16,10 +16,10 @@ public class TestBase {
 
     protected Properties testData;
 
-    @Parameters({"browser", "mobile", "includeAudio"})
+    @Parameters({"browser", "headlessMode", "mobile", "includeAudio"})
     @BeforeClass(description = "Initialize the web driver, load the test data, and start recording a video")
-    public void setUp(String browser, boolean mobile, boolean includeAudio) {
-        new Driver(browser, mobile);
+    public void setUp(String browser, boolean headlessMode, boolean mobile, boolean includeAudio) {
+        new Driver(browser, headlessMode, mobile);
         loadTestData();
         //ScreenActions.startVideoRecording(this.getClass().getName(), includeAudio);
     }

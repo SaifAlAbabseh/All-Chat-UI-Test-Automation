@@ -14,23 +14,23 @@ public class Driver {
 
     private static WebDriver driver;
 
-    public Driver(String browserName, boolean mobileMode) {
+    public Driver(String browserName, boolean headlessMode, boolean mobileMode) {
         if(browserName.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless");
+            if(headlessMode) options.addArguments("--headless");
             driver = new ChromeDriver(options);
         }
         else if(browserName.equalsIgnoreCase("firefox")) {
             WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
-            options.addArguments("--headless");
+            if(headlessMode) options.addArguments("--headless");
             driver = new FirefoxDriver(options);
         }
         else if(browserName.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver().setup();
             EdgeOptions options = new EdgeOptions();
-            options.addArguments("--headless");
+            if(headlessMode) options.addArguments("--headless");
             driver = new EdgeDriver(options);
         }
         Dimension windowSize = (mobileMode)?new Dimension(500, 900):new Dimension(1920, 1080);

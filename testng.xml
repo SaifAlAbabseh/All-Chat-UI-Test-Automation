@@ -2,6 +2,7 @@
 <suite name="All Chat Test Suite">
     <test name="All Chat Test on Chrome">
         <parameter name="browser" value="chrome"/>
+        <parameter name="headlessMode" value="true"/>
         <parameter name="mobile" value="false"/>
         <parameter name="includeAudio" value="false"/>
         <classes>
@@ -10,8 +11,10 @@
         </classes>
     </test>
 
+
     <test name="All Chat Test on Chrome Mobile">
         <parameter name="browser" value="chrome"/>
+        <parameter name="headlessMode" value="true"/>
         <parameter name="mobile" value="true"/>
         <parameter name="includeAudio" value="false"/>
         <classes>
@@ -22,6 +25,7 @@
 
     <test name="All Chat Test on Firefox">
         <parameter name="browser" value="firefox"/>
+        <parameter name="headlessMode" value="true"/>
         <parameter name="mobile" value="false"/>
         <parameter name="includeAudio" value="false"/>
         <classes>
@@ -32,6 +36,7 @@
 
     <test name="All Chat Test on Edge">
         <parameter name="browser" value="edge"/>
+        <parameter name="headlessMode" value="true"/>
         <parameter name="mobile" value="false"/>
         <parameter name="includeAudio" value="false"/>
         <classes>
