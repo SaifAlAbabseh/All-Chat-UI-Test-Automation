@@ -40,14 +40,14 @@ jobs:
 
     - name: Upload Screenshots of the Failed Tests
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: Screenshots of failed tests
         path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
 
     - name: Upload Test Report
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: Test Report
         path: target/surefire-reports/**
