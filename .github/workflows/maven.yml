@@ -1,92 +1,92 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+# # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+# # This workflow uses actions that are not certified by GitHub.
+# # They are provided by a third-party and are governed by
+# # separate terms of service, privacy policy, and support
+# # documentation.
 
-name: Java CI with Maven
+# name: Java CI with Maven
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  # schedule:
-  #   - cron: '0 0 * * *'
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+#   # schedule:
+#   #   - cron: '0 0 * * *'
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
   
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Set up JDK 17
+#       uses: actions/setup-java@v3
+#       with:
+#         java-version: '17'
+#         distribution: 'temurin'
+#         cache: maven
 
-    - name: Checkout code
-      uses: actions/checkout@v3
+#     - name: Checkout code
+#       uses: actions/checkout@v3
 
-    - name: Run TestNG Tests
-      run: |
-        mvn test -DsuiteXmlFile=testng.xml
-      working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
-      id: run-tests
+#     - name: Run TestNG Tests
+#       run: |
+#         mvn test -DsuiteXmlFile=testng.xml
+#       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
+#       id: run-tests
 
-    - name: Upload Screenshots of the Failed Tests
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: Screenshots of failed tests
-        path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
+#     - name: Upload Screenshots of the Failed Tests
+#       if: ${{ failure() }}
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: Screenshots of failed tests
+#         path: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation/src/main/screenshots/**
 
-    - name: Upload Test Report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: Test Report
-        path: target/surefire-reports/**
+#     - name: Upload Test Report
+#       if: always()
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: Test Report
+#         path: target/surefire-reports/**
 
-    - name: Install libxml2-utils
-      run: sudo apt-get install -y libxml2-utils
+#     - name: Install libxml2-utils
+#       run: sudo apt-get install -y libxml2-utils
 
-    - name: Get Test Result Values from XML Report
-      if: ${{ success() }}
-      id: test-report-values
-      run: |
-        XML_FILE="target/surefire-reports/testng-results.xml"
-        NUM_TESTS=$(xmllint --xpath 'string(//testng-results/@total)' $XML_FILE)
-        NUM_PASSED_TESTS=$(xmllint --xpath 'string(//testng-results/@passed)' $XML_FILE)
-        NUM_FAILED_TESTS=$(xmllint --xpath 'string(//testng-results/@failed)' $XML_FILE)
-        NUM_SKIPPED_TESTS=$(xmllint --xpath 'string(//testng-results/@skipped)' $XML_FILE)
-        echo "num_tests=$NUM_TESTS" >> $GITHUB_OUTPUT
-        echo "num_passed_tests=$NUM_PASSED_TESTS" >> $GITHUB_OUTPUT
-        echo "num_failed_tests=$NUM_FAILED_TESTS" >> $GITHUB_OUTPUT
-        echo "num_skipped_tests=$NUM_SKIPPED_TESTS" >> $GITHUB_OUTPUT
+#     - name: Get Test Result Values from XML Report
+#       if: ${{ success() }}
+#       id: test-report-values
+#       run: |
+#         XML_FILE="target/surefire-reports/testng-results.xml"
+#         NUM_TESTS=$(xmllint --xpath 'string(//testng-results/@total)' $XML_FILE)
+#         NUM_PASSED_TESTS=$(xmllint --xpath 'string(//testng-results/@passed)' $XML_FILE)
+#         NUM_FAILED_TESTS=$(xmllint --xpath 'string(//testng-results/@failed)' $XML_FILE)
+#         NUM_SKIPPED_TESTS=$(xmllint --xpath 'string(//testng-results/@skipped)' $XML_FILE)
+#         echo "num_tests=$NUM_TESTS" >> $GITHUB_OUTPUT
+#         echo "num_passed_tests=$NUM_PASSED_TESTS" >> $GITHUB_OUTPUT
+#         echo "num_failed_tests=$NUM_FAILED_TESTS" >> $GITHUB_OUTPUT
+#         echo "num_skipped_tests=$NUM_SKIPPED_TESTS" >> $GITHUB_OUTPUT
         
-    - name: Post to a Slack Channel
-      if: always()
-      id: slack
-      uses: slackapi/slack-github-action@v1.24.0
-      with:
-        channel-id: 'automation-jobs'
-        payload: |
-          {
-            "text": "Tests Result: ${{ steps.run-tests.outcome }}",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "Tests Result: ${{ steps.run-tests.outcome == 'success' && ':white_check_mark:' || ':x:' }} ${{ steps.run-tests.outcome }}\n#########################\nTotal Tests: ${{ steps.test-report-values.outputs.num_tests }}\n${{ ':white_check_mark:' }} Passed Tests: ${{ steps.test-report-values.outputs.num_passed_tests }}\n${{ ':x:' }} Failed Tests: ${{ steps.test-report-values.outputs.num_failed_tests }}\n${{ ':fast_forward:' }} Skipped Tests: ${{ steps.test-report-values.outputs.num_skipped_tests }}\n#########################\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n<@U05R1CUTPBN>"
-                }
-              }
-            ]
-          }
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+#     - name: Post to a Slack Channel
+#       if: always()
+#       id: slack
+#       uses: slackapi/slack-github-action@v1.24.0
+#       with:
+#         channel-id: 'automation-jobs'
+#         payload: |
+#           {
+#             "text": "Tests Result: ${{ steps.run-tests.outcome }}",
+#             "blocks": [
+#               {
+#                 "type": "section",
+#                 "text": {
+#                   "type": "mrkdwn",
+#                   "text": "Tests Result: ${{ steps.run-tests.outcome == 'success' && ':white_check_mark:' || ':x:' }} ${{ steps.run-tests.outcome }}\n#########################\nTotal Tests: ${{ steps.test-report-values.outputs.num_tests }}\n${{ ':white_check_mark:' }} Passed Tests: ${{ steps.test-report-values.outputs.num_passed_tests }}\n${{ ':x:' }} Failed Tests: ${{ steps.test-report-values.outputs.num_failed_tests }}\n${{ ':fast_forward:' }} Skipped Tests: ${{ steps.test-report-values.outputs.num_skipped_tests }}\n#########################\nWorkflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n<@U05R1CUTPBN>"
+#                 }
+#               }
+#             ]
+#           }
+#       env:
+#         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
