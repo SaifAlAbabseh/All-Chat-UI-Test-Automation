@@ -1,10 +1,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="All Chat Test Suite">
     <test name="All Chat Test on Chrome">
-        <parameter name="browser" value="chrome"/>
-        <parameter name="headlessMode" value="true"/>
-        <parameter name="mobile" value="false"/>
-        <parameter name="includeAudio" value="false"/>
+        <parameter name="browser" value="${browser}"/>
+        <parameter name="headlessMode" value="${headlessMode}"/>
+        <parameter name="mobile" value="${mobile}"/>
+        <parameter name="includeAudio" value="${includeAudio}"/>
         <classes>
             <class name="tests.MainTest">
             </class>
@@ -12,36 +12,36 @@
     </test>
 
 
-    <test name="All Chat Test on Chrome Mobile">
-        <parameter name="browser" value="chrome"/>
-        <parameter name="headlessMode" value="true"/>
-        <parameter name="mobile" value="true"/>
-        <parameter name="includeAudio" value="false"/>
-        <classes>
-            <class name="tests.MainTest">
-            </class>
-        </classes>
-    </test>
+<!--    <test name="All Chat Test on Chrome Mobile">-->
+<!--        <parameter name="browser" value="chrome"/>-->
+<!--        <parameter name="headlessMode" value="true"/>-->
+<!--        <parameter name="mobile" value="true"/>-->
+<!--        <parameter name="includeAudio" value="false"/>-->
+<!--        <classes>-->
+<!--            <class name="tests.MainTest">-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
-    <test name="All Chat Test on Firefox">
-        <parameter name="browser" value="firefox"/>
-        <parameter name="headlessMode" value="true"/>
-        <parameter name="mobile" value="false"/>
-        <parameter name="includeAudio" value="false"/>
-        <classes>
-            <class name="tests.MainTest">
-            </class>
-        </classes>
-    </test>
+<!--    <test name="All Chat Test on Firefox">-->
+<!--        <parameter name="browser" value="firefox"/>-->
+<!--        <parameter name="headlessMode" value="true"/>-->
+<!--        <parameter name="mobile" value="false"/>-->
+<!--        <parameter name="includeAudio" value="false"/>-->
+<!--        <classes>-->
+<!--            <class name="tests.MainTest">-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
-    <test name="All Chat Test on Edge">
-        <parameter name="browser" value="edge"/>
-        <parameter name="headlessMode" value="true"/>
-        <parameter name="mobile" value="false"/>
-        <parameter name="includeAudio" value="false"/>
-        <classes>
-            <class name="tests.MainTest">
-            </class>
-        </classes>
-    </test>
+<!--    <test name="All Chat Test on Edge">-->
+<!--        <parameter name="browser" value="edge"/>-->
+<!--        <parameter name="headlessMode" value="true"/>-->
+<!--        <parameter name="mobile" value="false"/>-->
+<!--        <parameter name="includeAudio" value="false"/>-->
+<!--        <classes>-->
+<!--            <class name="tests.MainTest">-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 </suite>
