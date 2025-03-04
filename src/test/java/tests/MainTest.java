@@ -40,6 +40,6 @@ public class MainTest extends TestBase {
         }
         assertTrue(mainPage.getAddNewFriendLink().isDisplayed());
         assertTrue(mainPage.getEditProfileLink().isDisplayed());
-        assertTrue(false);
+        assertTrue(mainPage.getUsernameLabel().isDisplayed());
     }
 }
