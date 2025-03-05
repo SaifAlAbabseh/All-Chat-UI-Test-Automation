@@ -34,7 +34,7 @@
 
 #     - name: Run TestNG Tests
 #       run: |
-#         mvn test -DsuiteXmlFile=MainTestSuite.xml
+#         mvn test -DsuiteXmlFile=testng.xml
 #       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
 #       id: run-tests
 
