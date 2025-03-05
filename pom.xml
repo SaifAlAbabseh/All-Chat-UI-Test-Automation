@@ -36,13 +36,6 @@
             <version>4.15.0</version>
         </dependency>
         <dependency>
-            <groupId>atu.testng.reports.ATUTestRecorder</groupId>
-            <artifactId>ATUTestRecorder</artifactId>
-            <scope>system</scope>
-            <version>2.1</version>
-            <systemPath>${project.basedir}/jars/ATUTestRecorder_2.1.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>2.0.9</version>
