@@ -6,7 +6,7 @@
         <parameter name="mobile" value="${mobile}"/>
         <parameter name="includeAudio" value="${includeAudio}"/>
         <classes>
-            <class name="${testClass}" />
+            <class name="tests.MainTest" />
         </classes>
     </test>
 </suite>
