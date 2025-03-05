@@ -21,6 +21,7 @@ public class MainTest extends TestBase {
     @Test(priority = 1, description = "Test the login flow")
     public void testLoginPage() {
         loginPage.navigateToLoginPage(testData.getProperty("URL"));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loginPage.getPopUpExitButton()));
         assertEquals(loginPage.getLoginPageTitle(), testData.getProperty("title"));
         loginPage.clickOnPopUpExitButton();
         loginPage.setUsernameField(testData.getProperty("username"));

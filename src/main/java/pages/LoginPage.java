@@ -22,6 +22,10 @@ public class LoginPage extends Page {
         findElementBy(popUpExitButton).click();
     }
 
+    public By getPopUpExitButton() {
+        return popUpExitButton;
+    }
+
     public void setUsernameField(String username) {
         findElementBy(usernameInputField).sendKeys(username);
     }
