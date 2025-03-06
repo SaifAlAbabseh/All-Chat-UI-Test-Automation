@@ -2,7 +2,7 @@
 <suite name="All Chat Test Suite">
     <test name="All Chat Test on Chrome">
         <parameter name="browser" value="${browser}"/>
-        <parameter name="headlessMode" value="${headlessMode}"/>
+        <parameter name="headlessMode" value="true"/>
         <parameter name="mobile" value="${mobile}"/>
         <parameter name="includeAudio" value="${includeAudio}"/>
         <classes>
