@@ -34,7 +34,7 @@ jobs:
 
     - name: Run TestNG Tests
       run: |
-        mvn test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser='chrome' -Dmobile='false' -DincludeAudio='false'
+        mvn test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser='chrome' -DheadlessMode='true' -Dmobile='false' -DincludeAudio='false'
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
 
