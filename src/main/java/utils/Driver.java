@@ -19,18 +19,19 @@ public class Driver {
 
     public Driver(String browserName, boolean headlessMode, boolean mobileMode) {
         if(browserName.equalsIgnoreCase("chrome")) {
-            String driverPath = Paths.get("web_drivers", "chromedriver.exe").toAbsolutePath().toString();
-            System.setProperty("webdriver.chrome.driver", driverPath);
+            WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             if(headlessMode) options.addArguments("--headless");
             driver = new ChromeDriver(options);
         }
         else if(browserName.equalsIgnoreCase("firefox")) {
+            WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
             if(headlessMode) options.addArguments("--headless");
             driver = new FirefoxDriver(options);
         }
         else if(browserName.equalsIgnoreCase("edge")) {
+            WebDriverManager.edgedriver().setup();
             EdgeOptions options = new EdgeOptions();
             if(headlessMode) options.addArguments("--headless");
             driver = new EdgeDriver(options);
