@@ -16,6 +16,7 @@ public class Driver {
 
     public Driver(String browserName, boolean headlessMode, boolean mobileMode) {
         if(browserName.equalsIgnoreCase("chrome")) {
+            System.setProperty("webdriver.chrome.driver", "/web_drivers/chromedriver.exe");
             ChromeOptions options = new ChromeOptions();
             if(headlessMode) options.addArguments("--headless");
             driver = new ChromeDriver(options);
