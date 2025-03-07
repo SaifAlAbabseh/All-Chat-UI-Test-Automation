@@ -1,6 +1,7 @@
 package utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,13 +11,16 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
+import java.nio.file.Paths;
+
 public class Driver {
 
     private static WebDriver driver;
 
     public Driver(String browserName, boolean headlessMode, boolean mobileMode) {
         if(browserName.equalsIgnoreCase("chrome")) {
-            System.setProperty("webdriver.chrome.driver", "/web_drivers/chromedriver.exe");
+            String driverPath = Paths.get("web_drivers", "chromedriver.exe").toAbsolutePath().toString();
+            System.setProperty("webdriver.chrome.driver", driverPath);
             ChromeOptions options = new ChromeOptions();
             if(headlessMode) options.addArguments("--headless");
             driver = new ChromeDriver(options);
