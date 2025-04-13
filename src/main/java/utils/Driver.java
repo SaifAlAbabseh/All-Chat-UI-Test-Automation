@@ -33,7 +33,7 @@ public class Driver {
         else if(browserName.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver().setup();
             EdgeOptions options = new EdgeOptions();
-            if(headlessMode) options.addArguments("--headless=new");
+            if(headlessMode) options.addArguments("--headless");
             driver = new EdgeDriver(options);
         }
         Dimension windowSize = (mobileMode)?new Dimension(500, 900):new Dimension(1920, 1080);
