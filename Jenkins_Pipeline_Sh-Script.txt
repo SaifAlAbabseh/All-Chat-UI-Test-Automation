@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    environment {
+        SLACK_CHANNEL = '#automation-jobs'
+    }
+
+    tools {
+        maven 'Maven 3.9.11'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/SaifAlAbabseh/All-Chat-UI-Test-Automation.git'
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                script {
+                    sh 'mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser=${browser} -DheadlessMode=${headlessMode} -Dmobile=${mobile} -DincludeAudio=${includeAudio}'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+            archiveArtifacts artifacts: 'target/surefire-reports/**'
+            script {
+                def counts = sh(
+                    script: '''
+                        FILE="target/surefire-reports/testng-results.xml"
+                        TOTAL=$(grep -oP '(?<=total=")[0-9]+' "$FILE")
+                        PASSED=$(grep -oP '(?<=passed=")[0-9]+' "$FILE")
+                        FAILED=$(grep -oP '(?<=failed=")[0-9]+' "$FILE")
+                        SKIPPED=$(grep -oP '(?<=skipped=")[0-9]+' "$FILE")
+                        IGNORED=$(grep -oP '(?<=ignored=")[0-9]+' "$FILE")
+                        echo "$TOTAL,$PASSED,$FAILED,$SKIPPED,$IGNORED"
+                    ''',
+                    returnStdout: true
+                ).trim()
+
+                def parts = counts.split(',')
+                def TOTAL_TESTS   = parts[0]
+                def PASSED_TESTS  = parts[1]
+                def FAILED_TESTS  = parts[2]
+                def SKIPPED_TESTS = parts[3]
+                def IGNORED_TESTS = parts[4]
+
+                // Construct the Slack message once
+                def slackMessage = "Test Result: ${currentBuild.result}\n\n\n" +
+                                   "Total Test Cases: ${TOTAL_TESTS}\n" +
+                                   "✅ PASSED Test Cases: ${PASSED_TESTS}\n" +
+                                   "❌ FAILED Test Cases: ${FAILED_TESTS}\n" +
+                                   "⏩ SKIPPED Test Cases: ${SKIPPED_TESTS}\n" +
+                                   "⏩ IGNORED Test Cases: ${IGNORED_TESTS}\n" +
+                                   "*Job:* ${env.JOB_NAME}\n" +
+                                   "*Build #:* ${env.BUILD_NUMBER}\n" +
+                                   "*URL:* ${env.BUILD_URL}\n" +
+                                   "Test Report: <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>\n"
+
+                // Choose color based on build result
+                def color = currentBuild.result == 'SUCCESS' ? 'good' : 'danger'
+
+                // Send Slack message
+                slackSend(
+                    channel: "${env.SLACK_CHANNEL}",
+                    color: color,
+                    message: slackMessage
+                )
+            }
+        }
+    }
+}
