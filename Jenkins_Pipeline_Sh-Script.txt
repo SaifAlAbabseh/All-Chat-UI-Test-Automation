@@ -29,7 +29,7 @@ pipeline {
     post {
         always {
             junit 'target/surefire-reports/*.xml'
-            archiveArtifacts artifacts: 'target/surefire-reports/**'
+            archiveArtifacts artifacts: 'target/surefire-reports/**, src/main/screenshots/*.png'
             script {
                 def counts = sh(
                     script: '''
@@ -51,6 +51,9 @@ pipeline {
                 def SKIPPED_TESTS = parts[3]
                 def IGNORED_TESTS = parts[4]
 
+                def isSuccess = currentBuild.result == 'SUCCESS'
+                def failedScreenshots = isSuccess ? "" : "*Screenshots:* <${env.BUILD_URL}artifact/src/main/screenshots|Click here>\n"
+
                 // Construct the Slack message once
                 def slackMessage = "Test Result: ${currentBuild.result}\n\n\n" +
                                    "Total Test Cases: ${TOTAL_TESTS}\n" +
@@ -61,10 +64,11 @@ pipeline {
                                    "*Job:* ${env.JOB_NAME}\n" +
                                    "*Build #:* ${env.BUILD_NUMBER}\n" +
                                    "*URL:* ${env.BUILD_URL}\n" +
-                                   "Test Report: <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>\n"
+                                   failedScreenshots +
+                                   "*Test Report:* <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>\n"
 
                 // Choose color based on build result
-                def color = currentBuild.result == 'SUCCESS' ? 'good' : 'danger'
+                def color = isSuccess ? 'good' : 'danger'
 
                 // Send Slack message
                 slackSend(
