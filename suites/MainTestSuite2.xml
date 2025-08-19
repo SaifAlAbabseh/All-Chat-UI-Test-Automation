@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Chat Test Suite">
+    <test name="All Chat Test on Chrome">
+        <parameter name="browser" value="${browser}"/>
+        <parameter name="headlessMode" value="${headlessMode}"/>
+        <parameter name="mobile" value="${mobile}"/>
+        <parameter name="includeAudio" value="${includeAudio}"/>
+        <classes>
+            <class name="tests.MainTest" />
+        </classes>
+    </test>
+</suite>
