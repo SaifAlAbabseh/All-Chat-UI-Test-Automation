@@ -2,6 +2,7 @@ package utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
+import io.github.bonigarcia.wdm.managers.OperaDriverManager;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -35,7 +36,6 @@ public class Driver {
         else if(browserName.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver()
                     .driverRepositoryUrl(new URL("https://msedgedriver.microsoft.com"))
-                    .driverVersion("131.0.2903.51")
                     .setup();
             EdgeOptions options = new EdgeOptions();
             if(headlessMode) options.addArguments("--headless");
