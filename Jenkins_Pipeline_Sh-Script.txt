@@ -58,21 +58,30 @@ pipeline {
                 def IGNORED_TESTS = parts[4]
 
                 def isSuccess = currentBuild.result == 'SUCCESS'
-                def failedScreenshots = isSuccess ? "" : "*Screenshots:* <${env.BUILD_URL}artifact/src/main/screenshots|Click here>\n"
+                def failedScreenshots = isSuccess ? "" : "* 📸 Screenshots: <${env.BUILD_URL}artifact/src/main/screenshots|Click here>\n"
 
-                // Construct the Slack message once
-                def slackMessage = "Test Result: ${currentBuild.result}\n\n\n" +
-                                   "Total Test Cases: ${TOTAL_TESTS}\n" +
-                                   "✅ PASSED Test Cases: ${PASSED_TESTS}\n" +
-                                   "❌ FAILED Test Cases: ${FAILED_TESTS}\n" +
-                                   "⏩ SKIPPED Test Cases: ${SKIPPED_TESTS}\n" +
-                                   "⏩ IGNORED Test Cases: ${IGNORED_TESTS}\n" +
-                                   "*🌐 Browser:* ${browser}\n" +
-                                   "*Job:* ${env.JOB_NAME}\n" +
-                                   "*Build #:* ${env.BUILD_NUMBER}\n" +
-                                   "*URL:* ${env.BUILD_URL}\n" +
-                                   failedScreenshots +
-                                   "*Test Report:* <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>\n"
+                def jobStatusOverall = isSuccess ? '✅  PASSED JOB ✅' : '❌ FAILED JOB ❌';
+                def platformTestedOn = params.mobile ? '📱 Mobile' : '🖥️ Desktop';
+                def slackMessage = """
+************************************************************
+                        ${jobStatusOverall}
+************************************************************
+* 💼 Job: ${env.JOB_NAME}
+* 🔨 Build #: ${env.BUILD_NUMBER}
+* 🔨 Build Link: <${env.BUILD_URL}|Click here>
+************************************************************
+                        📊 Total Tests = ${TOTAL_TESTS}
+************************************************************
+* ✅ PASSED: ${PASSED_TESTS}
+* ❌ FAILED: ${FAILED_TESTS}
+* ⏩ SKIPPED: ${SKIPPED_TESTS}
+* ⏩ IGNORED: ${IGNORED_TESTS}
+************************************************************
+* 🌐 Browser: ${browser}
+* ⚙️ Platform: ${platformTestedOn}
+${failedScreenshots}
+* 📋 Test Report: <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>
+""";
 
                 // Choose color based on build result
                 def color = isSuccess ? 'good' : 'danger'
