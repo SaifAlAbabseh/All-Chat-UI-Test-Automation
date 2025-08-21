@@ -11,13 +11,15 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 
 public class Driver {
 
     private static WebDriver driver;
 
-    public Driver(String browserName, boolean headlessMode, boolean mobileMode) {
+    public Driver(String browserName, boolean headlessMode, boolean mobileMode) throws MalformedURLException {
         if(browserName.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
@@ -31,7 +33,10 @@ public class Driver {
             driver = new FirefoxDriver(options);
         }
         else if(browserName.equalsIgnoreCase("edge")) {
-            WebDriverManager.edgedriver().setup();
+            WebDriverManager.edgedriver()
+                    .driverRepositoryUrl(new URL("https://msedgedriver.microsoft.com"))
+                    .driverVersion("131.0.2903.51")
+                    .setup();
             EdgeOptions options = new EdgeOptions();
             if(headlessMode) options.addArguments("--headless");
             driver = new EdgeDriver(options);

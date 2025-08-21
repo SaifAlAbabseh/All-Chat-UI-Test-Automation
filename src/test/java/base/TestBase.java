@@ -10,6 +10,7 @@ import utils.ScreenActions;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.util.Properties;
 
 public class TestBase {
@@ -18,7 +19,7 @@ public class TestBase {
 
     @Parameters({"browser", "headlessMode", "mobile", "includeAudio"})
     @BeforeClass(description = "Initialize the web driver, load the test data, and start recording a video")
-    public void setUp(String browser, boolean headlessMode, boolean mobile, boolean includeAudio) {
+    public void setUp(String browser, boolean headlessMode, boolean mobile, boolean includeAudio) throws MalformedURLException {
         new Driver(browser, headlessMode, mobile);
         loadTestData();
         //ScreenActions.startVideoRecording(this.getClass().getName(), includeAudio);
