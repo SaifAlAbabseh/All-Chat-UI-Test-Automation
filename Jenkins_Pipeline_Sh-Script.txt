@@ -67,6 +67,7 @@ pipeline {
                                    "❌ FAILED Test Cases: ${FAILED_TESTS}\n" +
                                    "⏩ SKIPPED Test Cases: ${SKIPPED_TESTS}\n" +
                                    "⏩ IGNORED Test Cases: ${IGNORED_TESTS}\n" +
+                                   "*🌐 Browser:* ${browser}\n" +
                                    "*Job:* ${env.JOB_NAME}\n" +
                                    "*Build #:* ${env.BUILD_NUMBER}\n" +
                                    "*URL:* ${env.BUILD_URL}\n" +
