@@ -10,7 +10,9 @@ public class MainPage extends Page {
                addNewFriendLink = By.id("addLink"),
                editProfileLink = By.id("editLink"),
                usernameLabel = By.xpath("//div[@class='profileBox']/h2[@style='color:yellow']"),
-               menuIcon = By.id("m");
+               menuIcon = By.id("m"),
+                friendsBox = By.id("innerData"),
+                addNewFriendButton = By.id("addLink");
 
     public By getLoadingBox() {
         return loadingBox;
@@ -30,6 +32,23 @@ public class MainPage extends Page {
 
     public WebElement getUsernameLabel() {
         return findElementBy(usernameLabel);
+    }
+
+    public boolean verifyUsername(String username) {
+        return findElementBy(usernameLabel).getText().contains(username);
+    }
+
+    public void removeFriendIfExists(String friendUsername) {
+        try {
+            By friendRow = By.xpath(String.format("//div[@class='friendRow']//a[@href='Delete_Friend/?name=%s']", friendUsername));
+            findElementBy(friendsBox).findElement(friendRow).click();
+        }
+        catch(Exception ignore) {}
+    }
+
+    public AddFriendPage clickOnAddNewFriendButton() {
+        findElementBy(addNewFriendButton).click();
+        return new AddFriendPage();
     }
 
     public boolean isMenuDisplayed() {
