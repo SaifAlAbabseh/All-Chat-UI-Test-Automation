@@ -6,6 +6,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import utils.Driver;
+import utils.Page;
 import utils.ScreenActions;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Properties;
 public class TestBase {
 
     protected Properties testData;
+    protected final Page page = new Page();
 
     @Parameters({"browser", "headlessMode", "mobile", "includeAudio"})
     @BeforeClass(description = "Initialize the web driver, load the test data, and start recording a video")

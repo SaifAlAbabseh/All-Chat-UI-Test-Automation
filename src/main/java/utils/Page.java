@@ -2,7 +2,10 @@ package utils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 public class Page {
@@ -21,5 +24,11 @@ public class Page {
 
     public String getPageTitle() {
         return Driver.getDriver().getTitle();
+    }
+
+    public void goBack() {
+        By backButton = By.xpath("//a[img[@alt='Back Button']]");
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(backButton));
+        findElementBy(backButton).click();
     }
 }
