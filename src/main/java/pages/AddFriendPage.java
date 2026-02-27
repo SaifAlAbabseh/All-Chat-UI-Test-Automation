@@ -16,6 +16,7 @@ public class AddFriendPage extends Page {
                     addFriendResultLabel = By.id("addfriendLabel");
 
     public void typeUsername(String username) {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(usernameField));
         findElementBy(usernameField).sendKeys(username.substring(0, username.length() - 3));
     }
 

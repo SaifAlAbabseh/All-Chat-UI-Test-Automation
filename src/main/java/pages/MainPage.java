@@ -35,6 +35,7 @@ public class MainPage extends Page {
                         groupRowByName = "//tbody[@id='groupsInnerData']/tr/td/h2[text()='%s']";
 
     public WebElement getAddNewFriendLink() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(addNewFriendLink));
         return findElementBy(addNewFriendLink);
     }
 
@@ -43,10 +44,12 @@ public class MainPage extends Page {
     }
 
     public WebElement getEditProfileLink() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(editProfileLink));
         return findElementBy(editProfileLink);
     }
 
     public WebElement getUsernameLabel() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(usernameLabel));
         return findElementBy(usernameLabel);
     }
 
@@ -92,11 +95,13 @@ public class MainPage extends Page {
     }
 
     public AddFriendPage clickOnAddNewFriendButton() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(addNewFriendButton));
         findElementBy(addNewFriendButton).click();
         return new AddFriendPage();
     }
 
     public boolean isMenuDisplayed() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(menuIcon));
         return findElementBy(menuIcon).isDisplayed();
     }
 
@@ -120,20 +125,24 @@ public class MainPage extends Page {
 
     public void acceptFriendRequestFrom(String requesterUsername) {
         By friendRow = By.xpath(String.format(friendRowElement, requesterUsername));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
         findElementBy(notificationsBox).findElement(friendRow).findElement(friendRequestAcceptButton).click();
     }
 
     public void rejectFriendRequestFrom(String requesterUsername) {
         By friendRow = By.xpath(String.format(friendRowElement, requesterUsername));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
         findElementBy(notificationsBox).findElement(friendRow).findElement(friendRequestRejectButton).click();
     }
 
     public ProfilePage clickOnEditProfileButton() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(editProfileButton));
         findElementBy(editProfileButton).click();
         return new ProfilePage();
     }
 
     public void clickOnCreateGroupButton() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(createGroupButton));
         findElementBy(createGroupButton).click();
     }
 
@@ -143,12 +152,15 @@ public class MainPage extends Page {
     }
 
     public void clickOnCreateGroupSubmitButton() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(createGroupSubmitButton));
         findElementBy(createGroupSubmitButton).click();
     }
 
     public boolean verifyGroupHasBeenCreated(String groupName) {
         try {
-            findElementBy(By.xpath(String.format(groupRowByName, groupName)));
+            By groupRow = By.xpath(String.format(groupRowByName, groupName));
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(groupRow));
+            findElementBy(groupRow);
             return true;
         }
         catch(Exception e) {
@@ -159,6 +171,7 @@ public class MainPage extends Page {
 
     public boolean verifyGroupHasBeenDeleted(String groupName) {
         try {
+            MainHelpers.waitFor(2);
             findElementBy(By.xpath(String.format(groupRowByName, groupName)));
             return false;
         }
