@@ -27,6 +27,7 @@ public class LoginPage extends Page {
     }
 
     public void clickOnPopUpExitButton() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(popUpExitButton));
         findElementBy(popUpExitButton).click();
     }
 
