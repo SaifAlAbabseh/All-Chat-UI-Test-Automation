@@ -48,6 +48,7 @@ public class LoginPage extends Page {
     }
 
     public boolean isSignupBoxDisplayed() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(signupEmailField));
         return findElementBy(signupEmailField).isDisplayed();
     }
 
