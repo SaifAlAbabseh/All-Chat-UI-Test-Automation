@@ -1,5 +1,6 @@
 package pages;
 
+import helpers.MainHelpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -31,7 +32,7 @@ public class AddFriendPage extends Page {
     }
 
     public String returnAddNewFriendResult() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(addFriendResultLabel));
+        MainHelpers.waitFor(3);
         return findElementBy(addFriendResultLabel).getText();
     }
 }
