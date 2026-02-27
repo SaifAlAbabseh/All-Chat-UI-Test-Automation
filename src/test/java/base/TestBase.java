@@ -23,6 +23,7 @@ public class TestBase {
     @BeforeClass(description = "Initialize the web driver, load the test data, and start recording a video")
     public void setUp(String browser, boolean headlessMode, boolean mobile, boolean includeAudio) throws MalformedURLException {
         new Driver(browser, headlessMode, mobile);
+        Driver.printWindowSize();
         loadTestData();
         //ScreenActions.startVideoRecording(this.getClass().getName(), includeAudio);
     }

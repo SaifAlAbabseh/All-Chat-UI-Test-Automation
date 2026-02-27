@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import io.github.bonigarcia.wdm.managers.OperaDriverManager;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -56,5 +57,16 @@ public class Driver {
     }
     public static WebDriver getDriver() {
         return driver;
+    }
+    public static void printWindowSize() {
+        // Using Selenium API
+        Dimension size = driver.manage().window().getSize();
+        System.out.println("Window size via Selenium API: " + size.width + "x" + size.height);
+
+        // Using JavaScript (actual viewport)
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        Long width = (Long) js.executeScript("return window.innerWidth;");
+        Long height = (Long) js.executeScript("return window.innerHeight;");
+        System.out.println("Inner viewport size via JS: " + width + "x" + height);
     }
 }
