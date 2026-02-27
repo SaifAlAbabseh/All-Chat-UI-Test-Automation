@@ -24,12 +24,14 @@ public class Driver {
         if(browserName.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
+            options.addArguments("--no-sandbox");
             if(headlessMode) options.addArguments("--headless");
             driver = new ChromeDriver(options);
         }
         else if(browserName.equalsIgnoreCase("firefox")) {
             WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("--no-sandbox");
             if(headlessMode) options.addArguments("--headless");
             driver = new FirefoxDriver(options);
         }
@@ -38,6 +40,7 @@ public class Driver {
                     .driverRepositoryUrl(new URL("https://msedgedriver.microsoft.com"))
                     .setup();
             EdgeOptions options = new EdgeOptions();
+            options.addArguments("--no-sandbox");
             if(headlessMode) options.addArguments("--headless");
             driver = new EdgeDriver(options);
         }
