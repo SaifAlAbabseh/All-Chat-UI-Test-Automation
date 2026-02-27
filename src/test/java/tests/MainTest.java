@@ -65,6 +65,7 @@ public class MainTest extends TestBase {
         addFriendPage.typeUsername(testData.getProperty("friendUsername"));
         addFriendPage.verifySuggestionBox(testData.getProperty("friendUsername"));
         addFriendPage.clickOnAddButton();
+        mainPage.waitForLoading();
         assertEquals(addFriendPage.returnAddNewFriendResult(), "Sent Friend Request");
     }
 
