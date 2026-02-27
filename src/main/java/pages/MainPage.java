@@ -69,7 +69,7 @@ public class MainPage extends Page {
             findElementBy(friendsBox).findElement(friendRow).findElement(friendRowDeleteButton).click();
         }
         catch(Exception ignore) {
-            System.err.println("Could not click on delete button for the existing test friend");
+            System.err.println("Could not click on delete button for the existing test friend or there was no friend as expected.");
         }
     }
 
