@@ -101,7 +101,6 @@ public class MainPage extends Page {
     }
 
     public boolean isMenuDisplayed() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(menuIcon));
         return findElementBy(menuIcon).isDisplayed();
     }
 
