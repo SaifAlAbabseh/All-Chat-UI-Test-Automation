@@ -31,7 +31,7 @@ public class AddFriendPage extends Page {
     }
 
     public String returnAddNewFriendResult() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(addFriendResultLabel));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(addFriendResultLabel));
         return findElementBy(addFriendResultLabel).getText();
     }
 }
