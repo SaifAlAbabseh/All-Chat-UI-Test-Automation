@@ -42,9 +42,7 @@ public class Driver {
             driver = new FirefoxDriver(options);
         }
         else if(browserName.equalsIgnoreCase("edge")) {
-            WebDriverManager.edgedriver()
-                    .driverRepositoryUrl(new URL("https://msedgedriver.microsoft.com"))
-                    .setup();
+            WebDriverManager.edgedriver().setup();
             EdgeOptions options = new EdgeOptions();
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
