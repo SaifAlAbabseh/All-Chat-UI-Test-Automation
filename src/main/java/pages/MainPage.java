@@ -60,9 +60,10 @@ public class MainPage extends Page {
 
     public void removeFriendIfExists(String friendUsername) {
         try {
-            By existingFriendRow = By.xpath(String.format("a[@href='Delete_Friend/?name=%s']", friendUsername));
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(existingFriendRow));
-            findElementBy(friendsBox).findElement(returnActualFriendRowElement(friendUsername)).findElement(existingFriendRow).click();
+            By friendRowDeleteButton = By.xpath(String.format("a[@href='Delete_Friend/?name=%s']", friendUsername));
+            By friendRow = returnActualFriendRowElement(friendUsername);
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
+            findElementBy(friendsBox).findElement(friendRow).findElement(friendRowDeleteButton).click();
         }
         catch(Exception ignore) {
             System.err.println("Could not click on delete button for the existing test friend");
