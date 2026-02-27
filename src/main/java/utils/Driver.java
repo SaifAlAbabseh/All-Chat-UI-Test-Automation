@@ -45,7 +45,7 @@ public class Driver {
         }
         else if(browserName.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver().clearDriverCache();
-            WebDriverManager.edgedriver().browserVersion("145.0.3800.82").setup();
+            WebDriverManager.edgedriver().setup();
             EdgeOptions options = new EdgeOptions();
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
