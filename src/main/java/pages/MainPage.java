@@ -1,5 +1,6 @@
 package pages;
 
+import helpers.MainHelpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -23,9 +24,15 @@ public class MainPage extends Page {
                 notificationsBox = By.xpath("//div[@id='notificationsBox']"),
                 friendRequestAcceptButton = By.name("acceptFriendRequestButton"),
                 friendRequestRejectButton = By.name("rejectFriendRequestButton"),
-                editProfileButton = By.id("editLink");
+                editProfileButton = By.id("editLink"),
+                createGroupButton = By.id("create_group_button"),
+                createGroupNameField = By.name("group_name"),
+                createGroupPictureField = By.id("picField"),
+                createGroupSubmitButton = By.name("create_group_button"),
+                groupEnterButton = By.xpath("//tr/td/a[text()='Enter']");
 
-    private final String friendRowElement = "//table//tr[td[1]/h4[contains(., '%s')]]";
+    private final String friendRowElement = "//table//tr[td[1]/h4[contains(., '%s')]]",
+                        groupRowByName = "//tbody[@id='groupsInnerData']/tr/td/h2[text()='%s']";
 
     public WebElement getAddNewFriendLink() {
         return findElementBy(addNewFriendLink);
@@ -48,19 +55,30 @@ public class MainPage extends Page {
     }
 
     private By returnActualFriendRowElement(String friendUsername) {
-        return By.xpath(String.format("//div[@class='friendRow']//a[@href='Delete_Friend/?name=%s']", friendUsername));
+        return By.xpath(String.format("//div[@class='friendRow'][a[@href='Delete_Friend/?name=%s']]", friendUsername));
     }
 
     public void removeFriendIfExists(String friendUsername) {
         try {
-            findElementBy(friendsBox).findElement(returnActualFriendRowElement(friendUsername)).click();
+            MainHelpers.waitFor(2);
+            findElementBy(friendsBox).findElement(returnActualFriendRowElement(friendUsername)).findElement(By.xpath(String.format("a[@href='Delete_Friend/?name=%s']", friendUsername))).click();
         }
         catch(Exception ignore) {}
     }
 
+    public UserChatPage clickChatForFriend(String friendUsername) {
+        By friendRowChatButton = By.xpath(String.format("a[@href='Chat/?with=%s']", friendUsername));
+        By friendRow = returnActualFriendRowElement(friendUsername);
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
+        findElementBy(friendsBox).findElement(friendRow).findElement(friendRowChatButton).click();
+        return new UserChatPage();
+    }
+
     public boolean verifyNewFriend(String friendUsername) {
         try {
-            findElementBy(friendsBox).findElement(returnActualFriendRowElement(friendUsername));
+            By friendRow = returnActualFriendRowElement(friendUsername);
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
+            findElementBy(friendsBox).findElement(friendRow);
             return true;
         }
         catch(Exception e) {
@@ -92,6 +110,7 @@ public class MainPage extends Page {
     }
 
     public void clickOnNotificationsButton() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(notificationsButton));
         findElementBy(notificationsButton).click();
     }
 
@@ -108,5 +127,46 @@ public class MainPage extends Page {
     public ProfilePage clickOnEditProfileButton() {
         findElementBy(editProfileButton).click();
         return new ProfilePage();
+    }
+
+    public void clickOnCreateGroupButton() {
+        findElementBy(createGroupButton).click();
+    }
+
+    public void typeGroupInfo(String groupName, String groupImagePath) {
+        findElementBy(createGroupNameField).sendKeys(groupName);
+        findElementBy(createGroupPictureField).sendKeys(MainHelpers.getFileAbsolutePath(groupImagePath));
+    }
+
+    public void clickOnCreateGroupSubmitButton() {
+        findElementBy(createGroupSubmitButton).click();
+    }
+
+    public boolean verifyGroupHasBeenCreated(String groupName) {
+        try {
+            findElementBy(By.xpath(String.format(groupRowByName, groupName)));
+            return true;
+        }
+        catch(Exception e) {
+            System.err.println("Could not find the newly created group");
+        }
+        return false;
+    }
+
+    public boolean verifyGroupHasBeenDeleted(String groupName) {
+        try {
+            findElementBy(By.xpath(String.format(groupRowByName, groupName)));
+            return false;
+        }
+        catch(Exception ignore) {
+            return true;
+        }
+    }
+
+    public GroupChatPage clickEnterForGroup(String groupName) {
+        By groupRow = By.xpath(String.format("//tbody[@id='groupsInnerData']/tr[td/h2[text()='%s']]", groupName));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(groupRow));
+        findElementBy(groupRow).findElement(groupEnterButton).click();
+        return new GroupChatPage();
     }
 }

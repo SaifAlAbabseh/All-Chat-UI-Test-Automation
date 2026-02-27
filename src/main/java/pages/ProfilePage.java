@@ -1,5 +1,6 @@
 package pages;
 
+import helpers.MainHelpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -47,10 +48,8 @@ public class ProfilePage extends Page {
         findElementBy(changePasswordButton).click();
     }
 
-    public void uploadPicture() {
-        Path relativePath = Paths.get("src/main/data/files/profile_picture.png");
-        String absolutePath = relativePath.toAbsolutePath().toString();
-        findElementBy(fileInputElement).sendKeys(absolutePath);
+    public void uploadPicture(String picturePath) {
+        findElementBy(fileInputElement).sendKeys(MainHelpers.getFileAbsolutePath(picturePath));
     }
 
     public void clickOnProfilePictureSubmitButton() {

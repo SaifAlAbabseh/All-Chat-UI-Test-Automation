@@ -5,10 +5,7 @@ import helpers.MainHelpers;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
-import pages.AddFriendPage;
-import pages.LoginPage;
-import pages.MainPage;
-import pages.ProfilePage;
+import pages.*;
 import utils.Driver;
 import utils.Page;
 
@@ -23,6 +20,9 @@ public class MainTest extends TestBase {
     private MainPage mainPage;
     private AddFriendPage addFriendPage;
     private ProfilePage profilePage;
+    private final ChatPage chatPage = new ChatPage();
+    private UserChatPage userChatPage;
+    private GroupChatPage groupChatPage;
 
     @Test(priority = 1, description = "Test the signup flow")
     public void testSignup() {
@@ -55,13 +55,13 @@ public class MainTest extends TestBase {
         assertTrue(mainPage.getEditProfileLink().isDisplayed());
         assertTrue(mainPage.getUsernameLabel().isDisplayed());
         assertTrue(mainPage.verifyUsername(testData.getProperty("username")));
-        mainPage.removeFriendIfExists(testData.getProperty("friendUsername"));
-        mainPage.waitForLoading();
-        addFriendPage = mainPage.clickOnAddNewFriendButton();
     }
 
     @Test(priority = 4, description = "Test the add a new friend functionality")
     public void testAddFriend() {
+        mainPage.removeFriendIfExists(testData.getProperty("friendUsername"));
+        mainPage.waitForLoading();
+        addFriendPage = mainPage.clickOnAddNewFriendButton();
         addFriendPage.typeUsername(testData.getProperty("friendUsername"));
         addFriendPage.verifySuggestionBox(testData.getProperty("friendUsername"));
         addFriendPage.clickOnAddButton();
@@ -70,6 +70,7 @@ public class MainTest extends TestBase {
 
     @Test(priority = 5, description = "Test the accept friend request")
     public void testAcceptFriendRequest() {
+        MainHelpers.waitFor(2);
         page.goBack();
         mainPage.waitForLoading();
         mainPage.logout();
@@ -91,7 +92,7 @@ public class MainTest extends TestBase {
         profilePage.verifyUserPicture(testData.getProperty("friendUsername"));
         profilePage.verifyUsername(testData.getProperty("friendUsername"));
         profilePage.clickOnChangePictureButton();
-        profilePage.uploadPicture();
+        profilePage.uploadPicture("src/main/data/files/profile_picture.png");
         profilePage.clickOnProfilePictureSubmitButton();
         mainPage.waitForLoading();
         assertEquals(profilePage.returnSubmitPictureMessage(), "Successfully Changed");
@@ -107,5 +108,63 @@ public class MainTest extends TestBase {
         profilePage.typeConfirmNewPassword(password);
         profilePage.submitNewPassword();
         assertEquals(MainHelpers.returnWindowAlertBoxText(), "Successfully changed password :)");
+    }
+
+    @Test(priority = 8, description = "Test user chat")
+    public void testUserChat() {
+        page.goBack();
+        page.goBack();
+        mainPage.waitForLoading();
+        String message = "Hello, this is test automation message";
+        userChatPage = mainPage.clickChatForFriend(testData.getProperty("username"));
+        int currentMessagesCount = chatPage.returnCurrentMessagesCount();
+        chatPage.typeMessage(message);
+        chatPage.clickOnSendButton();
+        chatPage.verifySentMessage(message);
+        int messageCountAfter = chatPage.returnCurrentMessagesCount();
+        assertEquals(messageCountAfter, currentMessagesCount + 1);
+    }
+
+    @Test(priority = 9, description = "Test create group chat")
+    public void testCreateGroupChat() {
+        page.goBack();
+        mainPage.waitForLoading();
+        mainPage.clickOnCreateGroupButton();
+        String groupName = "testAuto";
+        mainPage.typeGroupInfo(groupName, "src/main/data/files/profile_picture.png");
+        mainPage.clickOnCreateGroupSubmitButton();
+        assertEquals(MainHelpers.returnWindowAlertBoxText(), String.format("Successfully created group: %s", groupName));
+        mainPage.waitForLoading();
+        assertTrue(mainPage.verifyGroupHasBeenCreated(groupName));
+    }
+
+    @Test(priority = 10, description = "Test group chat")
+    public void testGroupChat() {
+        String groupName = "testAuto";
+        groupChatPage = mainPage.clickEnterForGroup(groupName);
+        String message = "Hello, this is test automation message";
+        int currentMessagesCount = chatPage.returnCurrentMessagesCount();
+        chatPage.typeMessage(message);
+        chatPage.clickOnSendButton();
+        chatPage.verifySentMessage(message);
+        int messageCountAfter = chatPage.returnCurrentMessagesCount();
+        assertEquals(messageCountAfter, currentMessagesCount + 1);
+
+        // Test changing group picture
+        groupChatPage.clickOnGroupSettingsButton();
+        groupChatPage.clickOnEditPictureButton();
+        groupChatPage.uploadPicture("src/main/data/files/profile_picture.png");
+        groupChatPage.clickOnChangePictureButton();
+        assertEquals(MainHelpers.returnWindowAlertBoxText(), "Successfully Changed");
+
+        // Test invite friend to group
+        groupChatPage.clickOnAddPeopleButton();
+        groupChatPage.addFriendToGroup(testData.getProperty("username"));
+        groupChatPage.removeFriendFromGroup(testData.getProperty("username"));
+
+        // Test delete group
+        groupChatPage.destroyGroup();
+        mainPage.waitForLoading();
+        assertTrue(mainPage.verifyGroupHasBeenDeleted(groupName));
     }
 }
