@@ -24,6 +24,7 @@ public class Driver {
     public Driver(String browserName, boolean headlessMode, boolean mobileMode) throws MalformedURLException {
         String windowSizeInner = (mobileMode) ? "--window-size=500,900" : "--window-size=1920,1080";
         if(browserName.equalsIgnoreCase("chrome")) {
+            WebDriverManager.chromedriver().clearDriverCache();
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--no-sandbox");
@@ -33,6 +34,7 @@ public class Driver {
             driver = new ChromeDriver(options);
         }
         else if(browserName.equalsIgnoreCase("firefox")) {
+            WebDriverManager.firefoxdriver().clearDriverCache();
             WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
             options.addArguments("--no-sandbox");
@@ -42,7 +44,8 @@ public class Driver {
             driver = new FirefoxDriver(options);
         }
         else if(browserName.equalsIgnoreCase("edge")) {
-            WebDriverManager.edgedriver().setup();
+            WebDriverManager.edgedriver().clearDriverCache();
+            WebDriverManager.edgedriver().browserVersion("145.0.3800.82").setup();
             EdgeOptions options = new EdgeOptions();
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
