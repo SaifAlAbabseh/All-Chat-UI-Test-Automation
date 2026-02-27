@@ -21,18 +21,23 @@ public class Driver {
     private static WebDriver driver;
 
     public Driver(String browserName, boolean headlessMode, boolean mobileMode) throws MalformedURLException {
+        String windowSizeInner = (mobileMode) ? "--window-size=500,900" : "--window-size=1920,1080";
         if(browserName.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
             if(headlessMode) options.addArguments("--headless");
+            options.addArguments(windowSizeInner);
             driver = new ChromeDriver(options);
         }
         else if(browserName.equalsIgnoreCase("firefox")) {
             WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
             options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
             if(headlessMode) options.addArguments("--headless");
+            options.addArguments(windowSizeInner);
             driver = new FirefoxDriver(options);
         }
         else if(browserName.equalsIgnoreCase("edge")) {
@@ -41,7 +46,9 @@ public class Driver {
                     .setup();
             EdgeOptions options = new EdgeOptions();
             options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
             if(headlessMode) options.addArguments("--headless");
+            options.addArguments(windowSizeInner);
             driver = new EdgeDriver(options);
         }
         Dimension windowSize = (mobileMode)?new Dimension(500, 900):new Dimension(1920, 1080);
