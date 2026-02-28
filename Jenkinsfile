@@ -111,10 +111,7 @@ pipeline {
 ${failedScreenshots}
 * 📸 Test video recording is attached
 * 📋 Test Report: <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>
-""";
-
-                // Choose color based on build result
-                def color = isSuccess ? 'good' : 'danger'
+"""
 
                 def testVideoRecordingPath = "recordings/test.mp4"
 
