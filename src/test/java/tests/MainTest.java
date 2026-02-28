@@ -7,9 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import pages.*;
 import utils.Driver;
-import utils.Page;
-
-import java.lang.reflect.Method;
+import utils.EnvConfig;
 import java.time.Duration;
 
 import static org.testng.Assert.*;
@@ -26,7 +24,7 @@ public class MainTest extends TestBase {
 
     @Test(priority = 1, description = "Test the signup flow")
     public void testSignup() {
-        loginPage.navigateToLoginPage(testData.getProperty("URL"));
+        loginPage.navigateToLoginPage(EnvConfig.get("AC_URL"));
         new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loginPage.getPopUpExitButton()));
         loginPage.clickOnPopUpExitButton();
         loginPage.switchToSignup();
@@ -36,9 +34,13 @@ public class MainTest extends TestBase {
 
     @Test(priority = 2, description = "Test the login flow")
     public void testLoginPage() {
-        assertEquals(loginPage.getLoginPageTitle(), testData.getProperty("title"));
-        loginPage.setUsernameField(testData.getProperty("username"));
-        loginPage.setPasswordField(testData.getProperty("password"));
+        assertEquals(loginPage.getLoginPageTitle(), EnvConfig.get("AC_TITLE"));
+        loginPage.setUsernameField(EnvConfig.get("AC_USERNAME"));
+        loginPage.setPasswordField(EnvConfig.get("AC_PASSWORD"));
+        try {
+            Thread.sleep(5000);
+        }
+        catch(Exception ignore){}
         mainPage = loginPage.clickOnLoginButton();
         mainPage.waitForLoading();
     }
@@ -54,16 +56,16 @@ public class MainTest extends TestBase {
         assertTrue(mainPage.getAddNewFriendLink().isDisplayed());
         assertTrue(mainPage.getEditProfileLink().isDisplayed());
         assertTrue(mainPage.getUsernameLabel().isDisplayed());
-        assertTrue(mainPage.verifyUsername(testData.getProperty("username")));
+        assertTrue(mainPage.verifyUsername(EnvConfig.get("AC_USERNAME")));
     }
 
     @Test(priority = 4, description = "Test the add a new friend functionality")
     public void testAddFriend() {
-        mainPage.removeFriendIfExists(testData.getProperty("friendUsername"));
+        mainPage.removeFriendIfExists(EnvConfig.get("AC_FRIEND_USERNAME"));
         mainPage.waitForLoading();
         addFriendPage = mainPage.clickOnAddNewFriendButton();
-        addFriendPage.typeUsername(testData.getProperty("friendUsername"));
-        addFriendPage.verifySuggestionBox(testData.getProperty("friendUsername"));
+        addFriendPage.typeUsername(EnvConfig.get("AC_FRIEND_USERNAME"));
+        addFriendPage.verifySuggestionBox(EnvConfig.get("AC_FRIEND_USERNAME"));
         addFriendPage.clickOnAddButton();
         MainHelpers.waitFor(2);
         mainPage.waitForLoading();
@@ -78,21 +80,21 @@ public class MainTest extends TestBase {
         mainPage.logout();
         mainPage.waitForLoading();
         loginPage.clickOnPopUpExitButton();
-        loginPage.setUsernameField(testData.getProperty("friendUsername"));
-        loginPage.setPasswordField(testData.getProperty("password"));
+        loginPage.setUsernameField(EnvConfig.get("AC_FRIEND_USERNAME"));
+        loginPage.setPasswordField(EnvConfig.get("AC_PASSWORD"));
         mainPage = loginPage.clickOnLoginButton();
         mainPage.waitForLoading();
         mainPage.clickOnNotificationsButton();
-        mainPage.acceptFriendRequestFrom(testData.getProperty("username"));
+        mainPage.acceptFriendRequestFrom(EnvConfig.get("AC_USERNAME"));
         mainPage.waitForLoading();
-        assertTrue(mainPage.verifyNewFriend(testData.getProperty("username")));
+        assertTrue(mainPage.verifyNewFriend(EnvConfig.get("AC_USERNAME")));
     }
 
     @Test(priority = 6, description = "Test edit user profile picture")
     public void testUserEditProfilePicture() {
         profilePage = mainPage.clickOnEditProfileButton();
-        profilePage.verifyUserPicture(testData.getProperty("friendUsername"));
-        profilePage.verifyUsername(testData.getProperty("friendUsername"));
+        profilePage.verifyUserPicture(EnvConfig.get("AC_FRIEND_USERNAME"));
+        profilePage.verifyUsername(EnvConfig.get("AC_FRIEND_USERNAME"));
         profilePage.clickOnChangePictureButton();
         profilePage.uploadPicture("src/main/data/files/profile_picture.png");
         profilePage.clickOnProfilePictureSubmitButton();
@@ -102,7 +104,7 @@ public class MainTest extends TestBase {
 
     @Test(priority = 7, description = "Test edit user password")
     public void testUserChangePassword() {
-        String password = testData.getProperty("password");
+        String password = EnvConfig.get("AC_PASSWORD");
         page.goBack();
         profilePage.clickOnChangePasswordButton();
         profilePage.typeCurrentPassword(password);
@@ -118,7 +120,7 @@ public class MainTest extends TestBase {
         page.goBack();
         mainPage.waitForLoading();
         String message = "Hello, this is test automation message";
-        userChatPage = mainPage.clickChatForFriend(testData.getProperty("username"));
+        userChatPage = mainPage.clickChatForFriend(EnvConfig.get("AC_USERNAME"));
         int currentMessagesCount = chatPage.returnCurrentMessagesCount();
         chatPage.typeMessage(message);
         chatPage.clickOnSendButton();
@@ -161,8 +163,8 @@ public class MainTest extends TestBase {
 
         // Test invite friend to group
         groupChatPage.clickOnAddPeopleButton();
-        groupChatPage.addFriendToGroup(testData.getProperty("username"));
-        groupChatPage.removeFriendFromGroup(testData.getProperty("username"));
+        groupChatPage.addFriendToGroup(EnvConfig.get("AC_USERNAME"));
+        groupChatPage.removeFriendFromGroup(EnvConfig.get("AC_USERNAME"));
 
         // Test delete group
         groupChatPage.destroyGroup();

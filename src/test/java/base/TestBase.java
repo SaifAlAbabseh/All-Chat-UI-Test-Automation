@@ -16,7 +16,6 @@ import java.util.Properties;
 
 public class TestBase {
 
-    protected Properties testData;
     protected final Page page = new Page();
 
     @Parameters({"browser", "headlessMode", "mobile", "includeAudio"})
@@ -24,7 +23,6 @@ public class TestBase {
     public void setUp(String browser, boolean headlessMode, boolean mobile, boolean includeAudio) throws MalformedURLException {
         new Driver(browser, headlessMode, mobile);
         Driver.printWindowSize();
-        loadTestData();
         //ScreenActions.startVideoRecording(this.getClass().getName(), includeAudio);
     }
 
@@ -41,16 +39,5 @@ public class TestBase {
     public void tearDown() {
         //ScreenActions.stopVideoRecording();
         Driver.getDriver().quit();
-    }
-
-    private void loadTestData() {
-        try {
-            FileInputStream fileReader = new FileInputStream("src/main/data/main_data.properties");
-            testData = new Properties();
-            testData.load(fileReader);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
