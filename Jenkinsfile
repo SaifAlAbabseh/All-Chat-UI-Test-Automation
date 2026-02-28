@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         SLACK_CHANNEL = '#automation-jobs'
+        SLACK_CHANNEL_ID = 'C05R1CXD2Q4'
     }
 
     tools {
@@ -19,7 +20,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/SaifAlAbabseh/All-Chat-UI-Test-Automation.git'
+                        url: 'https://github.com/SaifAlAbabseh/All-Chat-UI-Test-Automation.git'
             }
         }
 
@@ -32,22 +33,41 @@ pipeline {
             }
         }
 
-        stage('Build & Test') {
+        stage('Start Recording') {
             steps {
-                script {
-                    sh 'mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser=${browser} -DheadlessMode=${headlessMode} -Dmobile=${mobile} -DincludeAudio=${includeAudio}'
-                }
+                sh '''
+                #!/bin/bash
+                Xvfb :1 -screen 0 1920x1080x24 -ac &
+                export DISPLAY=:1
+                
+                mkdir -p $WORKSPACE/recordings
+                chmod 777 $WORKSPACE/recordings
+                
+                ffmpeg -y -probesize 100M -analyzeduration 100M -f x11grab -video_size 1920x1080 -i $DISPLAY \
+                       -r 30 -codec:v libx264 -preset ultrafast \
+                       $WORKSPACE/recordings/test.mp4 &
+                FFMPEG_PID=$!
+                
+                mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml \
+                               -Dbrowser=${browser} -DheadlessMode=${headlessMode} \
+                               -Dmobile=${mobile} -DincludeAudio=${includeAudio}
+                               
+                kill -2 $FFMPEG_PID
+                wait $FFMPEG_PID 2>/dev/null
+                '''
             }
         }
     }
 
     post {
         always {
+            archiveArtifacts artifacts: 'recordings/*.mp4', allowEmptyArchive: false
+
             junit 'target/surefire-reports/*.xml'
             archiveArtifacts artifacts: 'target/surefire-reports/**, src/main/screenshots/*.png'
             script {
                 def counts = sh(
-                    script: '''
+                        script: '''
                         FILE="target/surefire-reports/testng-results.xml"
                         TOTAL=$(grep -oP '(?<=total=")[0-9]+' "$FILE")
                         PASSED=$(grep -oP '(?<=passed=")[0-9]+' "$FILE")
@@ -56,7 +76,7 @@ pipeline {
                         IGNORED=$(grep -oP '(?<=ignored=")[0-9]+' "$FILE")
                         echo "$TOTAL,$PASSED,$FAILED,$SKIPPED,$IGNORED"
                     ''',
-                    returnStdout: true
+                        returnStdout: true
                 ).trim()
 
                 def parts = counts.split(',')
@@ -69,8 +89,8 @@ pipeline {
                 def isSuccess = currentBuild.result == 'SUCCESS'
                 def failedScreenshots = isSuccess ? "" : "* 📸 Screenshots: <${env.BUILD_URL}artifact/src/main/screenshots|Click here>\n"
 
-                def jobStatusOverall = isSuccess ? '✅  PASSED JOB ✅' : '❌ FAILED JOB ❌';
-                def platformTestedOn = params.mobile ? '📱 Mobile' : '🖥️ Desktop';
+                def jobStatusOverall = isSuccess ? '✅  PASSED JOB ✅' : '❌ FAILED JOB ❌'
+                def platformTestedOn = params.mobile ? '📱 Mobile' : '🖥️ Desktop'
                 def slackMessage = """
 ************************************************************
                         ${jobStatusOverall}
@@ -89,17 +109,20 @@ pipeline {
 * 🌐 Browser: ${browser}
 * ⚙️ Platform: ${platformTestedOn}
 ${failedScreenshots}
+* 📸 Test video recording is attached
 * 📋 Test Report: <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>
 """;
 
                 // Choose color based on build result
                 def color = isSuccess ? 'good' : 'danger'
 
+                def testVideoRecordingPath = "recordings/test.mp4"
+
                 // Send Slack message
-                slackSend(
-                    channel: "${env.SLACK_CHANNEL}",
-                    color: color,
-                    message: slackMessage
+                slackUploadFile(
+                        channel: "${env.SLACK_CHANNEL_ID}",
+                        initialComment: slackMessage,
+                        filePath: testVideoRecordingPath
                 )
             }
         }
