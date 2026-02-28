@@ -1,7 +1,9 @@
 package helpers;
 
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.MainPage;
 import utils.Driver;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,5 +30,19 @@ public class MainHelpers {
     public static String getFileAbsolutePath(String relativePath) {
         Path relativeActualPath = Paths.get(relativePath);
         return relativeActualPath.toAbsolutePath().toString();
+    }
+
+    public static void ifOnMobileViewClickMenu(MainPage mainPage) {
+        if(mainPage.isMenuDisplayed()) {
+            mainPage.clickOnMenu();
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(6)).until(ExpectedConditions.visibilityOfElementLocated(mainPage.getAddNewFriendLink2()));
+        }
+    }
+
+    public static void ifOnMobileViewCloseMenu(MainPage mainPage) {
+        if(mainPage.isMenuDisplayed()) {
+            mainPage.closeMenu();
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(6)).until(ExpectedConditions.invisibilityOfElementLocated(mainPage.getAddNewFriendLink2()));
+        }
     }
 }

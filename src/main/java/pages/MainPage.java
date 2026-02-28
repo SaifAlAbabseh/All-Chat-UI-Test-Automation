@@ -29,7 +29,8 @@ public class MainPage extends Page {
                 createGroupNameField = By.name("group_name"),
                 createGroupPictureField = By.id("picField"),
                 createGroupSubmitButton = By.name("create_group_button"),
-                groupEnterButton = By.xpath("//tr/td/a[text()='Enter']");
+                groupEnterButton = By.xpath("//tr/td/a[text()='Enter']"),
+                mobileViewMenuClosebutton = By.id("exit_menu_button");
 
     private final String friendRowElement = "//table//tr[td[1]/h4[contains(., '%s')]]",
                         groupRowByName = "//tbody[@id='groupsInnerData']/tr/td/h2[text()='%s']";
@@ -57,16 +58,16 @@ public class MainPage extends Page {
         return findElementBy(usernameLabel).getText().contains(username);
     }
 
-    private By returnActualFriendRowElement(String friendUsername) {
-        return By.xpath(String.format("//div[@class='friendRow'][a[@href='Delete_Friend/?name=%s']]", friendUsername));
+    private By returnActualFriendRowElement(String whichOperation, String friendUsername) {
+        String operationElement = String.format("//div[@class='friendRow']/a[@href='%s/?%s=%s']", whichOperation, (whichOperation.equals("Chat")) ? "with" : "name", friendUsername);
+        return By.xpath(operationElement);
     }
 
     public void removeFriendIfExists(String friendUsername) {
         try {
-            By friendRowDeleteButton = By.xpath(String.format("a[@href='Delete_Friend/?name=%s']", friendUsername));
-            By friendRow = returnActualFriendRowElement(friendUsername);
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
-            findElementBy(friendsBox).findElement(friendRow).findElement(friendRowDeleteButton).click();
+            By friendDeleteButton = returnActualFriendRowElement("Delete_Friend", friendUsername);
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendDeleteButton));
+            findElementBy(friendDeleteButton).click();
         }
         catch(Exception ignore) {
             System.err.println("Could not click on delete button for the existing test friend or there was no friend as expected.");
@@ -74,18 +75,17 @@ public class MainPage extends Page {
     }
 
     public UserChatPage clickChatForFriend(String friendUsername) {
-        By friendRowChatButton = By.xpath(String.format("a[@href='Chat/?with=%s']", friendUsername));
-        By friendRow = returnActualFriendRowElement(friendUsername);
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
-        findElementBy(friendsBox).findElement(friendRow).findElement(friendRowChatButton).click();
+        By friendChatButton = returnActualFriendRowElement("Chat", friendUsername);
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendChatButton));
+        findElementBy(friendChatButton).click();
         return new UserChatPage();
     }
 
     public boolean verifyNewFriend(String friendUsername) {
         try {
-            By friendRow = returnActualFriendRowElement(friendUsername);
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
-            findElementBy(friendsBox).findElement(friendRow);
+            By friendChatButton = returnActualFriendRowElement("Chat", friendUsername);
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendChatButton));
+            findElementBy(friendChatButton);
             return true;
         }
         catch(Exception e) {
@@ -184,5 +184,9 @@ public class MainPage extends Page {
         new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(groupRow));
         findElementBy(groupRow).findElement(groupEnterButton).click();
         return new GroupChatPage();
+    }
+
+    public void closeMenu() {
+        findElementBy(mobileViewMenuClosebutton).click();
     }
 }

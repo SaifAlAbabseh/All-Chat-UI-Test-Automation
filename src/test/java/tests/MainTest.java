@@ -37,10 +37,6 @@ public class MainTest extends TestBase {
         assertEquals(loginPage.getLoginPageTitle(), EnvConfig.get("AC_TITLE"));
         loginPage.setUsernameField(EnvConfig.get("AC_USERNAME"));
         loginPage.setPasswordField(EnvConfig.get("AC_PASSWORD"));
-        try {
-            Thread.sleep(5000);
-        }
-        catch(Exception ignore){}
         mainPage = loginPage.clickOnLoginButton();
         mainPage.waitForLoading();
     }
@@ -49,20 +45,19 @@ public class MainTest extends TestBase {
     public void testMainPage() {
         // Done waiting for the loading screen to be disappeared, and we can check the main page
         //If on mobile view, there's a menu we need to click on to continue our tests
-        if(mainPage.isMenuDisplayed()) {
-            mainPage.clickOnMenu();
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(6)).until(ExpectedConditions.visibilityOfElementLocated(mainPage.getAddNewFriendLink2()));
-        }
+        MainHelpers.ifOnMobileViewClickMenu(mainPage);
         assertTrue(mainPage.getAddNewFriendLink().isDisplayed());
         assertTrue(mainPage.getEditProfileLink().isDisplayed());
         assertTrue(mainPage.getUsernameLabel().isDisplayed());
         assertTrue(mainPage.verifyUsername(EnvConfig.get("AC_USERNAME")));
+        MainHelpers.ifOnMobileViewCloseMenu(mainPage);
     }
 
     @Test(priority = 4, description = "Test the add a new friend functionality")
     public void testAddFriend() {
         mainPage.removeFriendIfExists(EnvConfig.get("AC_FRIEND_USERNAME"));
         mainPage.waitForLoading();
+        MainHelpers.ifOnMobileViewClickMenu(mainPage);
         addFriendPage = mainPage.clickOnAddNewFriendButton();
         addFriendPage.typeUsername(EnvConfig.get("AC_FRIEND_USERNAME"));
         addFriendPage.verifySuggestionBox(EnvConfig.get("AC_FRIEND_USERNAME"));
@@ -77,6 +72,7 @@ public class MainTest extends TestBase {
         MainHelpers.waitFor(2);
         page.goBack();
         mainPage.waitForLoading();
+        MainHelpers.ifOnMobileViewClickMenu(mainPage);
         mainPage.logout();
         mainPage.waitForLoading();
         loginPage.clickOnPopUpExitButton();
@@ -84,6 +80,7 @@ public class MainTest extends TestBase {
         loginPage.setPasswordField(EnvConfig.get("AC_PASSWORD"));
         mainPage = loginPage.clickOnLoginButton();
         mainPage.waitForLoading();
+        MainHelpers.ifOnMobileViewClickMenu(mainPage);
         mainPage.clickOnNotificationsButton();
         mainPage.acceptFriendRequestFrom(EnvConfig.get("AC_USERNAME"));
         mainPage.waitForLoading();
@@ -92,6 +89,7 @@ public class MainTest extends TestBase {
 
     @Test(priority = 6, description = "Test edit user profile picture")
     public void testUserEditProfilePicture() {
+        MainHelpers.ifOnMobileViewClickMenu(mainPage);
         profilePage = mainPage.clickOnEditProfileButton();
         profilePage.verifyUserPicture(EnvConfig.get("AC_FRIEND_USERNAME"));
         profilePage.verifyUsername(EnvConfig.get("AC_FRIEND_USERNAME"));
