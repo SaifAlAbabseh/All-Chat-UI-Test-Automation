@@ -23,6 +23,15 @@ pipeline {
             }
         }
 
+        stage('Set Env') {
+            steps {
+                script {
+                    def props = readProperties file: '/var/Env/.env'
+                    props.each { k, v -> env."$k" = v }
+                }
+            }
+        }
+
         stage('Build & Test') {
             steps {
                 script {
