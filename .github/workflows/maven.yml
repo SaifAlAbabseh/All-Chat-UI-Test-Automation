@@ -32,9 +32,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Download .env from Gist
+      run: curl -o .env "${{ secrets.GIST_ENV_URL }}"
+
+    - name: Export variables
+      run: |
+         set -a
+         source .env
+         set +a
+
     - name: Run TestNG Tests
       run: |
-        mvn test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser='chrome' -DheadlessMode='true' -Dmobile='false' -DincludeAudio='false'
+        mvn test -DsuiteXmlFile=suites/test.xml -Dbrowser='chrome' -DheadlessMode='true' -Dmobile='false' -DincludeAudio='false'
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
 
