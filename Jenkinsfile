@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'recordings/*.mp4', allowEmptyArchive: false
+            archiveArtifacts artifacts: 'recordings/*.mp4', allowEmptyArchive: true
 
             junit 'target/surefire-reports/*.xml'
             archiveArtifacts artifacts: 'target/surefire-reports/**, src/main/screenshots/*.png'
@@ -86,7 +86,7 @@ pipeline {
                 def SKIPPED_TESTS = parts[3]
                 def IGNORED_TESTS = parts[4]
 
-                def isSuccess = currentBuild.result == 'SUCCESS'
+                def isSuccess = (currentBuild.result == null || currentBuild.result == 'SUCCESS')
                 def failedScreenshots = isSuccess ? "" : "* 📸 Screenshots: <${env.BUILD_URL}artifact/src/main/screenshots|Click here>\n"
 
                 def jobStatusOverall = isSuccess ? '✅  PASSED JOB ✅' : '❌ FAILED JOB ❌'
