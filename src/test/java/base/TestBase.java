@@ -23,7 +23,7 @@ public class TestBase {
     public void setUp(String browser, boolean headlessMode, boolean mobile, boolean includeAudio) throws MalformedURLException {
         new Driver(browser, headlessMode, mobile);
         Driver.printWindowSize();
-        //ScreenActions.startVideoRecording(this.getClass().getName(), includeAudio);
+//        ScreenActions.startVideoRecording(this.getClass().getName(), includeAudio);
     }
 
     @Parameters({"browser", "mobile"})
@@ -31,13 +31,13 @@ public class TestBase {
     public void createScreenshotOnFailure(ITestResult result, Method method, String browser, boolean mobile) {
         if(!result.isSuccess()) {
             String whichPlatform = (mobile)?"mobile view":"desktop view";
-            ScreenActions.takeScreenshot(browser, whichPlatform, method.getName());
+//            ScreenActions.takeScreenshot(browser, whichPlatform, method.getName());
         }
     }
 
     @AfterClass(description = "Stop the video record and quit from the web driver")
     public void tearDown() {
-        //ScreenActions.stopVideoRecording();
+//        ScreenActions.stopVideoRecording();
         Driver.getDriver().quit();
     }
 }

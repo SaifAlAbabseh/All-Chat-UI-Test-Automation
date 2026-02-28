@@ -55,6 +55,12 @@
             <artifactId>dotenv-java</artifactId>
             <version>3.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.testervippro</groupId>
+            <artifactId>record-video</artifactId>
+            <version>2.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
