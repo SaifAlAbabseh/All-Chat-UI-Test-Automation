@@ -32,6 +32,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Download .env from Gist
+      run: curl -o .env "${{ secrets.GIST_ENV_URL }}"
+
+    - name: Export variables
+      run: |
+         set -a
+         export $(grep -v '^#' .env | xargs)
+         set +a
+
     - name: Run TestNG Tests
       run: |
         mvn test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser='chrome' -DheadlessMode='true' -Dmobile='false' -DincludeAudio='false'
