@@ -52,8 +52,8 @@ pipeline {
                                -Dbrowser=${browser} -DheadlessMode=${headlessMode} \
                                -Dmobile=${mobile} -DincludeAudio=${includeAudio}
                                
-                kill -2 $FFMPEG_PID
-                wait $FFMPEG_PID 2>/dev/null
+                kill -2 $FFMPEG_PID || true
+                wait $FFMPEG_PID 2>/dev/null || true
                 '''
             }
         }
@@ -109,16 +109,24 @@ pipeline {
 * 🌐 Browser: ${browser}
 * ⚙️ Platform: ${platformTestedOn}
 ${failedScreenshots}
-* 📸 Test video recording is attached
 * 📋 Test Report: <${env.BUILD_URL}artifact/target/surefire-reports/index.html|Click here>
+* ⬇️⬇️ Test video recording can be found below ⬇️⬇️
 """
 
                 def testVideoRecordingPath = "recordings/test.mp4"
 
+                def resultColor = isSuccess ? "good" : "danger"
+
                 // Send Slack message
+                slackSend(
+                        channel:"${env.SLACK_CHANNEL}",
+                        color: resultColor,
+                        message: slackMessage
+                )
+
+                // Send Slack test video file
                 slackUploadFile(
                         channel: "${env.SLACK_CHANNEL_ID}",
-                        initialComment: slackMessage,
                         filePath: testVideoRecordingPath
                 )
             }
