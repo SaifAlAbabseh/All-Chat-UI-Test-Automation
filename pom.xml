@@ -59,7 +59,6 @@
             <groupId>io.github.testervippro</groupId>
             <artifactId>record-video</artifactId>
             <version>2.1</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
@@ -70,6 +69,11 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.17.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>2.0.1</version>
         </dependency>
     </dependencies>
 

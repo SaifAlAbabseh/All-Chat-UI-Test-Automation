@@ -2,6 +2,9 @@ package utils;
 
 import jakarta.mail.*;
 import jakarta.mail.search.SubjectTerm;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMultipart;
@@ -43,6 +46,12 @@ public class EmailReader {
             return extractAllText((MimeMultipart) content);
         }
 
+        // Fallback: sometimes content is InputStream
+        if (content instanceof InputStream) {
+            InputStream is = (InputStream) content;
+            return Jsoup.parse(new String(is.readAllBytes(), StandardCharsets.UTF_8)).text();
+        }
+
         return "";
     }
 
@@ -57,20 +66,35 @@ public class EmailReader {
                 continue;
             }
 
-            // text/plain (optional, you can include or skip)
+            Object partContent = part.getContent();
+
+            // text/plain → include
             if (part.isMimeType("text/plain")) {
-                result.append(part.getContent().toString()).append("\n");
+                if (partContent instanceof String) {
+                    result.append(partContent.toString()).append("\n");
+                } else if (partContent instanceof InputStream) {
+                    InputStream is = (InputStream) partContent;
+                    result.append(new String(is.readAllBytes(), StandardCharsets.UTF_8)).append("\n");
+                }
             }
 
             // text/html → convert to text
             else if (part.isMimeType("text/html")) {
-                String html = part.getContent().toString();
-                result.append(Jsoup.parse(html).text()).append("\n");
+                String html = null;
+                if (partContent instanceof String) {
+                    html = partContent.toString();
+                } else if (partContent instanceof InputStream) {
+                    InputStream is = (InputStream) partContent;
+                    html = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                }
+                if (html != null) {
+                    result.append(Jsoup.parse(html).text()).append("\n");
+                }
             }
 
             // Nested multipart
-            else if (part.getContent() instanceof MimeMultipart) {
-                result.append(extractAllText((MimeMultipart) part.getContent()));
+            else if (partContent instanceof MimeMultipart) {
+                result.append(extractAllText((MimeMultipart) partContent));
             }
         }
 
