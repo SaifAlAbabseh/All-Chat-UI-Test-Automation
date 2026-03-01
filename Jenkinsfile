@@ -37,6 +37,8 @@ pipeline {
             steps {
                 sh '''
                 #!/bin/bash
+                set +e
+                
                 Xvfb :1 -screen 0 1920x1080x24 -ac &
                 export DISPLAY=:1
                 
@@ -48,12 +50,24 @@ pipeline {
                        $WORKSPACE/recordings/test.mp4 &
                 FFMPEG_PID=$!
                 
+                cleanup() {
+                    echo ">>> CLEANUP RUNNING"
+                    if [[ -n "$FFMPEG_PID" ]]; then
+                        kill -2 "$FFMPEG_PID" 2>/dev/null || true
+                        wait "$FFMPEG_PID" 2>/dev/null || true
+                    fi
+                    pkill Xvfb 2>/dev/null || true
+                }
+                
+                trap cleanup EXIT
+                
                 mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml \
                                -Dbrowser=${browser} -DheadlessMode=${headlessMode} \
                                -Dmobile=${mobile} -DincludeAudio=${includeAudio}
                                
-                kill -2 $FFMPEG_PID || true
-                wait $FFMPEG_PID 2>/dev/null || true
+                TEST_EXIT_CODE=$?
+                echo "Maven exited with $TEST_EXIT_CODE"
+                exit $TEST_EXIT_CODE
                 '''
             }
         }
