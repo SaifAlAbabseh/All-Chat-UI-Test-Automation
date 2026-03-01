@@ -38,15 +38,15 @@ public class EmailReader {
         Object content = message.getContent();
 
         if (content instanceof String) {
-            // Single-part email
+            // Single-part plain text email
             return content.toString();
         }
 
         if (content instanceof MimeMultipart) {
-            return extractAllText((MimeMultipart) content);
+            return extractMultipart((MimeMultipart) content);
         }
 
-        // Fallback: sometimes content is InputStream
+        // Fallback: InputStream content (sometimes occurs in headless/minimal environments)
         if (content instanceof InputStream) {
             InputStream is = (InputStream) content;
             return Jsoup.parse(new String(is.readAllBytes(), StandardCharsets.UTF_8)).text();
@@ -55,47 +55,51 @@ public class EmailReader {
         return "";
     }
 
-    private static String extractAllText(MimeMultipart multipart) throws Exception {
-        StringBuilder result = new StringBuilder();
+    /**
+     * Recursively traverses all multipart contents and extracts full text.
+     */
+    private static String extractMultipart(MimeMultipart multipart) throws Exception {
+        StringBuilder bodyBuilder = new StringBuilder();
 
         for (int i = 0; i < multipart.getCount(); i++) {
             BodyPart part = multipart.getBodyPart(i);
 
-            // Ignore attachments
+            // Skip attachments
             if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
                 continue;
             }
 
             Object partContent = part.getContent();
 
-            if (part.isMimeType("text/html")) {
-                if (partContent instanceof String) {
-                    result.append(partContent.toString()).append("\n");
-                } else if (partContent instanceof InputStream) {
-                    InputStream is = (InputStream) partContent;
-                    result.append(new String(is.readAllBytes(), StandardCharsets.UTF_8)).append("\n");
-                }
+            // Handle nested multipart recursively
+            if (partContent instanceof MimeMultipart) {
+                bodyBuilder.append(extractMultipart((MimeMultipart) partContent));
             }
-
+            // text/plain → include
             else if (part.isMimeType("text/plain")) {
-                String html = null;
-                if (partContent instanceof String) {
-                    html = partContent.toString();
-                } else if (partContent instanceof InputStream) {
-                    InputStream is = (InputStream) partContent;
-                    html = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-                }
-                if (html != null) {
-                    result.append(Jsoup.parse(html).text()).append("\n");
-                }
+                bodyBuilder.append(getContentAsString(partContent)).append("\n");
             }
-
-            // Nested multipart
-            else if (partContent instanceof MimeMultipart) {
-                result.append(extractAllText((MimeMultipart) partContent));
+            // text/html → convert HTML to readable text
+            else if (part.isMimeType("text/html")) {
+                String html = getContentAsString(partContent);
+                bodyBuilder.append(Jsoup.parse(html).text()).append("\n");
             }
         }
 
-        return result.toString().trim();
+        return bodyBuilder.toString().trim();
+    }
+
+    /**
+     * Converts part content (String or InputStream) to String
+     */
+    private static String getContentAsString(Object content) throws Exception {
+        if (content instanceof String) {
+            return (String) content;
+        }
+        if (content instanceof InputStream) {
+            InputStream is = (InputStream) content;
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        return "";
     }
 }
