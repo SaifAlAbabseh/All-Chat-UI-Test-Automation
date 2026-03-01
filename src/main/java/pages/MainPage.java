@@ -101,7 +101,12 @@ public class MainPage extends Page {
     }
 
     public boolean isMenuDisplayed() {
-        return findElementBy(menuIcon).isDisplayed();
+        try {
+            WebElement menu = findElementBy(menuIcon);
+            return menu.isDisplayed();
+        }
+        catch(Exception ignore) {}
+        return false;
     }
 
     public void clickOnMenu() {
