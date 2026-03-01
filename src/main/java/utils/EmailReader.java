@@ -68,8 +68,6 @@ public class EmailReader {
 
             Object partContent = part.getContent();
 
-            // text/plain → include
-
             if (part.isMimeType("text/html")) {
                 if (partContent instanceof String) {
                     result.append(partContent.toString()).append("\n");
@@ -79,7 +77,6 @@ public class EmailReader {
                 }
             }
 
-            // text/html → convert to text
             else if (part.isMimeType("text/plain")) {
                 String html = null;
                 if (partContent instanceof String) {
