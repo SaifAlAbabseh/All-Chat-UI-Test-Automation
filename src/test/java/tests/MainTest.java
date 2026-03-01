@@ -28,7 +28,7 @@ public class MainTest extends TestBase {
         new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loginPage.getPopUpExitButton()));
         loginPage.clickOnPopUpExitButton();
         loginPage.switchToSignup();
-        assertTrue(loginPage.isSignupBoxDisplayed());
+        assertTrue(loginPage.isSignupBoxDisplayed(), "Expected to see the sign up container to be visible.");
         loginPage.switchToLogin();
     }
 
@@ -46,10 +46,10 @@ public class MainTest extends TestBase {
         // Done waiting for the loading screen to be disappeared, and we can check the main page
         //If on mobile view, there's a menu we need to click on to continue our tests
         MainHelpers.ifOnMobileViewClickMenu(mainPage);
-        assertTrue(mainPage.getAddNewFriendLink().isDisplayed());
-        assertTrue(mainPage.getEditProfileLink().isDisplayed());
-        assertTrue(mainPage.getUsernameLabel().isDisplayed());
-        assertTrue(mainPage.verifyUsername(EnvConfig.get("AC_USERNAME")));
+        assertTrue(mainPage.getAddNewFriendLink().isDisplayed(), "Expected to see add new friend link visible.");
+        assertTrue(mainPage.getEditProfileLink().isDisplayed(), "Expected to see edit profile link visible.");
+        assertTrue(mainPage.getUsernameLabel().isDisplayed(), "Expected to see the username label visible.");
+        assertTrue(mainPage.verifyUsername(EnvConfig.get("AC_USERNAME")), "Expected to see the username label content: " + EnvConfig.get("AC_USERNAME"));
         MainHelpers.ifOnMobileViewCloseMenu(mainPage);
     }
 
@@ -67,7 +67,14 @@ public class MainTest extends TestBase {
         assertEquals(addFriendPage.returnAddNewFriendResult(), "Sent Friend Request");
     }
 
-    @Test(priority = 5, description = "Test the accept friend request")
+    @Test(priority = 5, description = "Test the sent email for friend request")
+    public void testFriendRequestEmail() {
+        String expectedEmailSubject = EnvConfig.get("AC_FRIEND_REQUEST_EMAIL_EXPECTED_SUBJECT");
+        String expectedBody = String.format(EnvConfig.get("AC_FRIEND_REQUEST_EMAIL_EXPECTED_BODY"), EnvConfig.get("AC_USERNAME"));
+        MainHelpers.verifyEmail(EnvConfig.get("AC_FRIEND_EMAIL"), EnvConfig.get("AC_APP_PASSWORD"), expectedEmailSubject, 30, expectedBody);
+    }
+
+    @Test(priority = 6, description = "Test the accept friend request")
     public void testAcceptFriendRequest() {
         MainHelpers.waitFor(2);
         page.goBack();
@@ -84,10 +91,10 @@ public class MainTest extends TestBase {
         mainPage.clickOnNotificationsButton();
         mainPage.acceptFriendRequestFrom(EnvConfig.get("AC_USERNAME"));
         mainPage.waitForLoading();
-        assertTrue(mainPage.verifyNewFriend(EnvConfig.get("AC_USERNAME")));
+        assertTrue(mainPage.verifyNewFriend(EnvConfig.get("AC_USERNAME")), String.format("Expected to see the new friend <%s> be visible on main page.", EnvConfig.get("AC_USERNAME")));
     }
 
-    @Test(priority = 6, description = "Test edit user profile picture")
+    @Test(priority = 7, description = "Test edit user profile picture")
     public void testUserEditProfilePicture() {
         MainHelpers.ifOnMobileViewClickMenu(mainPage);
         profilePage = mainPage.clickOnEditProfileButton();
@@ -100,7 +107,7 @@ public class MainTest extends TestBase {
         assertEquals(profilePage.returnSubmitPictureMessage(), "Successfully Changed");
     }
 
-    @Test(priority = 7, description = "Test edit user password")
+    @Test(priority = 8, description = "Test edit user password")
     public void testUserChangePassword() {
         String password = EnvConfig.get("AC_PASSWORD");
         page.goBack();
@@ -112,7 +119,7 @@ public class MainTest extends TestBase {
         assertEquals(MainHelpers.returnWindowAlertBoxText(), "Successfully changed password :)");
     }
 
-    @Test(priority = 8, description = "Test user chat")
+    @Test(priority = 9, description = "Test user chat")
     public void testUserChat() {
         page.goBack();
         page.goBack();
@@ -127,7 +134,7 @@ public class MainTest extends TestBase {
         assertEquals(messageCountAfter, currentMessagesCount + 1);
     }
 
-    @Test(priority = 9, description = "Test create group chat")
+    @Test(priority = 10, description = "Test create group chat")
     public void testCreateGroupChat() {
         page.goBack();
         mainPage.waitForLoading();
@@ -137,10 +144,10 @@ public class MainTest extends TestBase {
         mainPage.clickOnCreateGroupSubmitButton();
         assertEquals(MainHelpers.returnWindowAlertBoxText(), String.format("Successfully created group: %s", groupName));
         mainPage.waitForLoading();
-        assertTrue(mainPage.verifyGroupHasBeenCreated(groupName));
+        assertTrue(mainPage.verifyGroupHasBeenCreated(groupName), String.format("Expected to see the new added group <%s> in the groups container", groupName));
     }
 
-    @Test(priority = 10, description = "Test group chat")
+    @Test(priority = 11, description = "Test group chat")
     public void testGroupChat() {
         String groupName = "testAuto";
         groupChatPage = mainPage.clickEnterForGroup(groupName);
@@ -167,6 +174,6 @@ public class MainTest extends TestBase {
         // Test delete group
         groupChatPage.destroyGroup();
         mainPage.waitForLoading();
-        assertTrue(mainPage.verifyGroupHasBeenDeleted(groupName));
+        assertTrue(mainPage.verifyGroupHasBeenDeleted(groupName), String.format("Expected that the group <%s> to be deleted from the groups container.", groupName));
     }
 }

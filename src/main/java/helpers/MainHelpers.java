@@ -1,10 +1,14 @@
 package helpers;
 
+import jakarta.mail.Message;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import pages.MainPage;
 import utils.Driver;
+import utils.EmailReader;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -43,6 +47,24 @@ public class MainHelpers {
         if(mainPage.isMenuDisplayed()) {
             mainPage.closeMenu();
             new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(6)).until(ExpectedConditions.invisibilityOfElementLocated(mainPage.getAddNewFriendLink2()));
+        }
+    }
+
+    public static void verifyEmail(String username, String appPassword, String subject, int timeoutSeconds, String expectedBody) {
+        try {
+            Message message = EmailReader.waitForEmail(
+                    "imap.gmail.com",
+                    username,
+                    appPassword,
+                    subject,
+                    timeoutSeconds
+            );
+
+            String body = EmailReader.getFullEmailBody(message);
+            Assert.assertTrue(body.toLowerCase().contains(expectedBody.toLowerCase()), "Expected email body to contain: " + expectedBody + "\n Actual body: " + body);
+        }
+        catch(Exception e) {
+            System.err.println("Could not read emails \n" + e.getMessage());
         }
     }
 }
