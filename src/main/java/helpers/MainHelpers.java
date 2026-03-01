@@ -61,8 +61,6 @@ public class MainHelpers {
             );
 
             String body = EmailReader.getFullEmailBody(message);
-            System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: \n" + expectedBody);
-            System.out.println("ooooooooooooooooooooooooooooooooooooooooooooooooo: \n" + expectedBody.toLowerCase());
             Assert.assertTrue(body.toLowerCase().contains(expectedBody.toLowerCase()), "Expected email body to contain: " + expectedBody + "\n Actual body: " + body);
         }
         catch(Exception e) {

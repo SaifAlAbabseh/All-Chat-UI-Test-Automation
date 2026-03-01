@@ -27,8 +27,14 @@ pipeline {
         stage('Set Env') {
             steps {
                 script {
-                    def props = readProperties file: '/var/Env/.env'
-                    props.each { k, v -> env."$k" = v }
+                    // Read the .env file as UTF-8
+                    def lines = readFile(file: '/var/Env/.env', encoding: 'UTF-8').readLines()
+                    lines.each { line ->
+                        line = line.trim()
+                        if (!line || line.startsWith("#")) return  // skip empty lines and comments
+                        def (key, value) = line.split("=", 2)
+                        env."$key" = value
+                    }
                 }
             }
         }
