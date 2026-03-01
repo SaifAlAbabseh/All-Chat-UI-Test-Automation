@@ -119,6 +119,7 @@ public class MainPage extends Page {
     }
 
     public void waitForLoading() {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loadingBox));
         new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.invisibilityOfElementLocated(loadingBox));
     }
 
