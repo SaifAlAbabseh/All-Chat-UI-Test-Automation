@@ -31,7 +31,7 @@ public class TestBase {
     public void createScreenshotOnFailure(ITestResult result, Method method, String browser, boolean mobile) {
         if(!result.isSuccess()) {
             String whichPlatform = (mobile)?"mobile view":"desktop view";
-//            ScreenActions.takeScreenshot(browser, whichPlatform, method.getName());
+            ScreenActions.takeScreenshot(browser, whichPlatform, method.getName());
         }
     }
 
