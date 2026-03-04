@@ -119,7 +119,12 @@ public class MainPage extends Page {
     }
 
     public void waitForLoading() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loadingBox));
+        try {
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loadingBox));
+        }
+        catch(Exception e) {
+            System.err.println("Could not see the loading container.. maybe it is as expected.");
+        }
         new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.invisibilityOfElementLocated(loadingBox));
     }
 
