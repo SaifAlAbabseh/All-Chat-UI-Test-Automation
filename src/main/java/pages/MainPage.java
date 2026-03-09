@@ -36,7 +36,6 @@ public class MainPage extends Page {
                         groupRowByName = "//tbody[@id='groupsInnerData']/tr/td/h2[text()='%s']";
 
     public WebElement getAddNewFriendLink() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(addNewFriendLink));
         return findElementBy(addNewFriendLink);
     }
 
@@ -45,12 +44,10 @@ public class MainPage extends Page {
     }
 
     public WebElement getEditProfileLink() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(editProfileLink));
         return findElementBy(editProfileLink);
     }
 
     public WebElement getUsernameLabel() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(usernameLabel));
         return findElementBy(usernameLabel);
     }
 
@@ -66,7 +63,6 @@ public class MainPage extends Page {
     public void removeFriendIfExists(String friendUsername) {
         try {
             By friendDeleteButton = returnActualFriendRowElement("Delete_Friend", friendUsername);
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendDeleteButton));
             findElementBy(friendDeleteButton).click();
         }
         catch(Exception ignore) {
@@ -76,7 +72,6 @@ public class MainPage extends Page {
 
     public UserChatPage clickChatForFriend(String friendUsername) {
         By friendChatButton = returnActualFriendRowElement("Chat", friendUsername);
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendChatButton));
         findElementBy(friendChatButton).click();
         return new UserChatPage();
     }
@@ -84,7 +79,6 @@ public class MainPage extends Page {
     public boolean verifyNewFriend(String friendUsername) {
         try {
             By friendChatButton = returnActualFriendRowElement("Chat", friendUsername);
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendChatButton));
             findElementBy(friendChatButton);
             return true;
         }
@@ -95,7 +89,6 @@ public class MainPage extends Page {
     }
 
     public AddFriendPage clickOnAddNewFriendButton() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(addNewFriendButton));
         findElementBy(addNewFriendButton).click();
         return new AddFriendPage();
     }
@@ -114,7 +107,6 @@ public class MainPage extends Page {
     }
 
     public void logout() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.visibilityOfElementLocated(logoutButton));
         findElementBy(logoutButton).click();
     }
 
@@ -129,30 +121,25 @@ public class MainPage extends Page {
     }
 
     public void clickOnNotificationsButton() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(notificationsButton));
         findElementBy(notificationsButton).click();
     }
 
     public void acceptFriendRequestFrom(String requesterUsername) {
         By friendRow = By.xpath(String.format(friendRowElement, requesterUsername));
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
-        findElementBy(notificationsBox).findElement(friendRow).findElement(friendRequestAcceptButton).click();
+        findElementBy(friendRow).findElement(friendRequestAcceptButton).click();
     }
 
     public void rejectFriendRequestFrom(String requesterUsername) {
         By friendRow = By.xpath(String.format(friendRowElement, requesterUsername));
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(friendRow));
-        findElementBy(notificationsBox).findElement(friendRow).findElement(friendRequestRejectButton).click();
+        findElementBy(friendRow).findElement(friendRequestRejectButton).click();
     }
 
     public ProfilePage clickOnEditProfileButton() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(editProfileButton));
         findElementBy(editProfileButton).click();
         return new ProfilePage();
     }
 
     public void clickOnCreateGroupButton() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(createGroupButton));
         findElementBy(createGroupButton).click();
     }
 
@@ -162,14 +149,12 @@ public class MainPage extends Page {
     }
 
     public void clickOnCreateGroupSubmitButton() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(createGroupSubmitButton));
         findElementBy(createGroupSubmitButton).click();
     }
 
     public boolean verifyGroupHasBeenCreated(String groupName) {
         try {
             By groupRow = By.xpath(String.format(groupRowByName, groupName));
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(groupRow));
             findElementBy(groupRow);
             return true;
         }
@@ -192,7 +177,6 @@ public class MainPage extends Page {
 
     public GroupChatPage clickEnterForGroup(String groupName) {
         By groupRow = By.xpath(String.format("//tbody[@id='groupsInnerData']/tr[td/h2[text()='%s']]", groupName));
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(8)).until(ExpectedConditions.elementToBeClickable(groupRow));
         findElementBy(groupRow).findElement(groupEnterButton).click();
         return new GroupChatPage();
     }

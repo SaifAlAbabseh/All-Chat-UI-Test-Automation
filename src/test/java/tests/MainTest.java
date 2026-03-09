@@ -25,7 +25,6 @@ public class MainTest extends TestBase {
     @Test(priority = 1, description = "Test the signup flow")
     public void testSignup() {
         loginPage.navigateToLoginPage(EnvConfig.get("AC_URL"));
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loginPage.getPopUpExitButton()));
         loginPage.clickOnPopUpExitButton();
         loginPage.switchToSignup();
         assertTrue(loginPage.isSignupBoxDisplayed(), "Expected to see the sign up container to be visible.");

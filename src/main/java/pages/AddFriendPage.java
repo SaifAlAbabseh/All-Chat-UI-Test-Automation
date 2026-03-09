@@ -17,14 +17,12 @@ public class AddFriendPage extends Page {
                     addFriendResultLabel = By.id("addfriendLabel");
 
     public void typeUsername(String username) {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(usernameField));
         findElementBy(usernameField).sendKeys(username.substring(0, username.length() - 3));
     }
 
     public void verifySuggestionBox(String username) {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='sug_row']")));
         By userRow = By.xpath(String.format("//div[@class='sug_row']//h3[contains(., '%s')]", username));
-        findElementBy(suggestionBox).findElement(userRow).click();
+        findElementBy(userRow).click();
     }
 
     public void clickOnAddButton() {
@@ -32,7 +30,6 @@ public class AddFriendPage extends Page {
     }
 
     public String returnAddNewFriendResult() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(addFriendResultLabel));
         return findElementBy(addFriendResultLabel).getText();
     }
 }

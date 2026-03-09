@@ -27,7 +27,6 @@ public class LoginPage extends Page {
     }
 
     public void clickOnPopUpExitButton() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(popUpExitButton));
         findElementBy(popUpExitButton).click();
     }
 
@@ -44,12 +43,10 @@ public class LoginPage extends Page {
     }
 
     public void switchToSignup() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(signupSwitcherButton));
         findElementBy(signupSwitcherButton).click();
     }
 
     public boolean isSignupBoxDisplayed() {
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(signupEmailField));
         return findElementBy(signupEmailField).isDisplayed();
     }
 

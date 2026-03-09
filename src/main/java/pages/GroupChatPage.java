@@ -41,14 +41,12 @@ public class GroupChatPage extends Page {
 
     public void addFriendToGroup(String friendUsername) {
         By friendRowElement = By.xpath(String.format(friendRow, friendUsername));
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(2)).until(ExpectedConditions.visibilityOfElementLocated(friendRowElement));
         findElementBy(friendRowElement).findElement(By.id("addlink")).click();
     }
 
     public void removeFriendFromGroup(String friendUsername) {
         clickOnGroupSettingsButton();
         try {
-            MainHelpers.waitFor(2);
             findElementBy(By.xpath(String.format(kickButton, friendUsername))).click();
         }
         catch(Exception e) {

@@ -15,6 +15,8 @@ public class Page {
     }
 
     public WebElement findElementBy(By elementSearchCriteria) {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(elementSearchCriteria));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(elementSearchCriteria));
         return Driver.getDriver().findElement(elementSearchCriteria);
     }
 
@@ -28,7 +30,6 @@ public class Page {
 
     public void goBack() {
         By backButton = By.xpath("//a[img[@alt='Back Button']]");
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(backButton));
         findElementBy(backButton).click();
     }
 }
