@@ -36,9 +36,7 @@ jobs:
 
     - name: Export variables
       run: |
-         set -a
-         source .env
-         set +a
+        grep -v '^#' .env >> $GITHUB_ENV
 
     - name: Run TestNG Tests
       run: |
