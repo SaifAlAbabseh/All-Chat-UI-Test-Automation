@@ -37,7 +37,7 @@ jobs:
     - name: Export variables
       run: |
          set -a
-         export $(grep -v '^#' .env | xargs)
+         source .env
          set +a
 
     - name: Run TestNG Tests
