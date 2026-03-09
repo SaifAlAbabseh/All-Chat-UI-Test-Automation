@@ -21,7 +21,9 @@ jobs:
     runs-on: ubuntu-latest
   
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -29,17 +31,17 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Checkout code
-      uses: actions/checkout@v3
-
     - name: Download .env from Gist
       run: curl -o .env "${{ secrets.GIST_ENV_URL }}"
 
-    - name: Export variables
+    - name: Export .env variables
       run: |
-         set -a
-         export $(grep -v '^#' .env | xargs)
-         set +a
+        while IFS='=' read -r key value; do
+          [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+          value="${value%\"}"
+          value="${value#\"}"
+          echo "$key=$value" >> $GITHUB_ENV
+        done < .env
 
     - name: Run TestNG Tests
       run: |
