@@ -34,10 +34,13 @@ jobs:
     - name: Download .env from Gist
       run: curl -o .env "${{ secrets.GIST_ENV_URL }}"
 
-    - name: Export variables
+    - name: Export .env variables
       run: |
-        while IFS= read -r line; do
-        echo "$line" >> $GITHUB_ENV
+        while IFS='=' read -r key value; do
+          [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+          value="${value%\"}"
+          value="${value#\"}"
+          echo "$key=$value" >> $GITHUB_ENV
         done < .env
 
     - name: Run TestNG Tests
