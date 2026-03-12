@@ -50,10 +50,7 @@ public class MainTest extends TestBase {
         assertTrue(mainPage.getUsernameLabel().isDisplayed(), "Expected to see the username label visible.");
         assertTrue(mainPage.verifyUsername(EnvConfig.get("AC_USERNAME")), "Expected to see the username label content: " + EnvConfig.get("AC_USERNAME"));
         MainHelpers.ifOnMobileViewCloseMenu(mainPage);
-        try {
-            Thread.sleep(5000);
-        }
-        catch(Exception ignored) {}
+        fail();
     }
 
 //    @Test(priority = 4, description = "Test the add a new friend functionality")
