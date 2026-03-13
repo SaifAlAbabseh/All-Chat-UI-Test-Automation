@@ -43,11 +43,42 @@ jobs:
           echo "$key=$value" >> $GITHUB_ENV
         done < .env
 
+    - name: Install tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb ffmpeg
+
+    - name: Start virtual display
+      run: |
+        Xvfb :99 -screen 0 1920x1080x24 &
+        echo "DISPLAY=:99" >> $GITHUB_ENV
+
+    - name: Start video recording
+      run: |
+        ffmpeg -video_size 1920x1080 \
+        -framerate 25 \
+        -f x11grab \
+        -i :99 \
+        test_recording.mp4 &
+        echo $! > ffmpeg.pid
+
     - name: Run TestNG Tests
       run: |
         mvn test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser='chrome' -DheadlessMode='true' -Dmobile='false' -DincludeAudio='false'
       working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
       id: run-tests
+
+    - name: Stop recording
+      if: always()
+      run: |
+        kill $(cat ffmpeg.pid)
+
+    - name: Upload recording
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-video
+        path: test_recording.mp4
 
     - name: Upload Screenshots of the Failed Tests
       if: ${{ failure() }}
