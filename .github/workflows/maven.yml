@@ -14,7 +14,7 @@ jobs:
       matrix:
         browser: [chrome]
         mobileMode: [true, false]
-        headlessMode: [true]
+        headlessMode: [false]
 
     steps:
       - name: Checkout code
