@@ -14,7 +14,7 @@ jobs:
       matrix:
         browser: [chrome]
         mobileMode: [true, false]
-        headlessMode: [false]
+        headlessMode: [true]
 
     steps:
       - name: Checkout code
@@ -40,19 +40,19 @@ jobs:
           done < .env
 
       - name: Install tools
-        if: ${{ always() && matrix.headlessMode == 'false' }}
+        if: ${{ always() && matrix.headlessMode == false }}
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb ffmpeg
 
       - name: Start virtual display
-        if: ${{ always() && matrix.headlessMode == 'false' }}
+        if: ${{ always() && matrix.headlessMode == false }}
         run: |
           Xvfb :99 -screen 0 1920x1080x24 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Start video recording
-        if: ${{ always() && matrix.headlessMode == 'false' }}
+        if: ${{ always() && matrix.headlessMode == false }}
         run: |
           ffmpeg -video_size 1920x1080 \
           -framerate 25 \
@@ -64,17 +64,17 @@ jobs:
       - name: Run TestNG Tests
         run: |
           mvn test -DsuiteXmlFile=suites/MainTestSuite.xml \
-          -Dbrowser=${{ matrix.browser }} -Dmobile=${{ matrix.mobileMode }} -DheadlessMode=${{ matrix.headlessMode }}
+          -Dbrowser='${{ matrix.browser }}' -Dmobile='${{ matrix.mobileMode }}' -DheadlessMode='${{ matrix.headlessMode }}'
         working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
         id: run-tests
 
       - name: Stop recording
-        if: ${{ always() && matrix.headlessMode == 'false' }}
+        if: ${{ always() && matrix.headlessMode == false }}
         run: |
           kill $(cat ffmpeg.pid)
 
       - name: Upload recording
-        if: ${{ always() && matrix.headlessMode == 'false' }}
+        if: ${{ always() && matrix.headlessMode == false }}
         uses: actions/upload-artifact@v4
         with:
           name: Test Recording Video (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
