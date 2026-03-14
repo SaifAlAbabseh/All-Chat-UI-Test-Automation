@@ -19,6 +19,7 @@ jobs:
     env:
       mobileViewRes: '500x900'
       desktopViewRes: '1920x1080'
+      DISPLAY_NUM: $((100 + $(echo "${{ github.job }}" | cksum | cut -f1 -d' ' ) % 50))
 
     steps:
       - name: Checkout code
@@ -58,8 +59,8 @@ jobs:
             RESOLUTION="${desktopViewRes}x24"
           fi
           
-          Xvfb :99 -screen 0 $RESOLUTION &
-          echo "DISPLAY=:99" >> $GITHUB_ENV
+          Xvfb :${DISPLAY_NUM} -screen 0 $RESOLUTION &
+          echo "DISPLAY=:${DISPLAY_NUM}" >> $GITHUB_ENV
 
       - name: Start video recording
         if: ${{ always() && matrix.headlessMode == false }}
@@ -73,7 +74,7 @@ jobs:
           ffmpeg -video_size $RESOLUTION \
           -framerate 25 \
           -f x11grab \
-          -i :99 \
+          -i :${DISPLAY_NUM} \
           test_recording.mp4 &
           echo $! > ffmpeg.pid
 
