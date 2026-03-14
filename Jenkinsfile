@@ -4,6 +4,8 @@ pipeline {
     environment {
         SLACK_CHANNEL = '#automation-jobs'
         SLACK_CHANNEL_ID = 'C05R1CXD2Q4'
+        MOBILE_VIEW_RESOLUTION = '500x900'
+        DESKTOP_VIEW_RESOLUTION = '1920x1080'
     }
 
     tools {
@@ -39,41 +41,62 @@ pipeline {
             }
         }
 
-        stage('Start Recording') {
+        stage('Set DISPLAY_NUM') {
             steps {
-                sh '''
-                #!/bin/bash
-                set +e
-                
-                Xvfb :1 -screen 0 1920x1080x24 -ac &
-                export DISPLAY=:1
-                
-                mkdir -p $WORKSPACE/recordings
-                chmod 777 $WORKSPACE/recordings
-                
-                ffmpeg -y -probesize 100M -analyzeduration 100M -f x11grab -video_size 1920x1080 -i $DISPLAY \
-                       -r 30 -codec:v libx264 -preset ultrafast \
-                       $WORKSPACE/recordings/test.mp4 &
-                FFMPEG_PID=$!
-                
-                cleanup() {
-                    echo ">>> CLEANUP RUNNING"
-                    if [[ -n "$FFMPEG_PID" ]]; then
-                        kill -2 "$FFMPEG_PID" 2>/dev/null || true
-                        wait "$FFMPEG_PID" 2>/dev/null || true
-                    fi
-                    pkill Xvfb 2>/dev/null || true
+                script {
+                    // Combine BUILD_ID and JOB_NAME
+                    def combined = "${env.BUILD_ID}${env.JOB_NAME}"
+
+                    // Sum bytes as unsigned
+                    def hash = combined.bytes.collect { it & 0xFF }.sum()   // & 0xFF converts byte to 0..255
+
+                    // Generate DISPLAY_NUM in a safe range
+                    env.DISPLAY_NUM = (100 + (hash % 200)).toString()
+
+                    echo "Generated DISPLAY_NUM: ${env.DISPLAY_NUM}"
                 }
-                
-                trap cleanup EXIT
-                
-                mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml \
-                -Dbrowser=${browser} -DheadlessMode=${headlessMode} -Dmobile=${mobile}
-                               
-                TEST_EXIT_CODE=$?
-                echo "Maven exited with $TEST_EXIT_CODE"
-                exit $TEST_EXIT_CODE
-                '''
+            }
+        }
+
+        stage('Start Tests & Video Recording') {
+            steps {
+                script {
+                    def resolution = (params.mobileMode) ? env.MOBILE_VIEW_RESOLUTION : env.DESKTOP_VIEW_RESOLUTION
+                    def resolution_with_color_value = resolution + "x24"
+                    sh """
+                    #!/bin/bash
+                    set +e
+                    
+                    Xvfb :$DISPLAY_NUM -screen 0 $resolution_with_color_value -ac &
+                    export DISPLAY=:$DISPLAY_NUM
+                    
+                    mkdir -p \$WORKSPACE/recordings
+                    chmod 777 \$WORKSPACE/recordings
+                    
+                    ffmpeg -y -probesize 100M -analyzeduration 100M -f x11grab -video_size $resolution -i \$DISPLAY \
+                           -r 30 -codec:v libx264 -preset ultrafast \
+                           \$WORKSPACE/recordings/test.mp4 &
+                    FFMPEG_PID=\$!
+                    
+                    cleanup() {
+                        echo ">>> CLEANUP RUNNING"
+                        if [[ -n "\$FFMPEG_PID" ]]; then
+                            kill -2 "\$FFMPEG_PID" 2>/dev/null || true
+                            wait "\$FFMPEG_PID" 2>/dev/null || true
+                        fi
+                        pkill Xvfb 2>/dev/null || true
+                    }
+                    
+                    trap cleanup EXIT
+                    
+                    mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml \
+                   -Dbrowser=\${browser} -DheadlessMode=\${headlessMode} -DmobileMode=\${mobileMode}
+                                   
+                    TEST_EXIT_CODE=\$?
+                    echo "Maven exited with \$TEST_EXIT_CODE"
+                    exit \$TEST_EXIT_CODE
+                    """
+                }
             }
         }
     }
@@ -109,7 +132,7 @@ pipeline {
                 def failedScreenshots = isSuccess ? "" : "* 📸 Screenshots: <${env.BUILD_URL}artifact/src/main/screenshots|Click here>\n"
 
                 def jobStatusOverall = isSuccess ? '✅  PASSED JOB ✅' : '❌ FAILED JOB ❌'
-                def platformTestedOn = params.mobile ? '📱 Mobile' : '🖥️ Desktop'
+                def platformTestedOn = params.mobileMode ? '📱 Mobile' : '🖥️ Desktop'
                 def slackMessage = """
 ************************************************************
                         ${jobStatusOverall}
