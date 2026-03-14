@@ -8,8 +8,7 @@ on:
 
 jobs:
   build:
-    name: |
-      Test on (Browser => ${{ matrix.browser }}, Mobile View => ${{ matrix.mobileMode }})
+    name: Test on (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -78,22 +77,19 @@ jobs:
         if: ${{ always() && matrix.headlessMode == 'false' }}
         uses: actions/upload-artifact@v4
         with:
-          name: |
-            Test Recording Video (Browser => ${{ matrix.browser }}, Mobile View => ${{ matrix.mobileMode }})
+          name: Test Recording Video (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
           path: test_recording.mp4
 
       - name: Upload Screenshots of the Failed Tests
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: |
-            Screenshots of failed tests (Browser => ${{ matrix.browser }}, Mobile View => ${{ matrix.mobileMode }})
+          name: Screenshots of failed tests (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
           path: src/main/screenshots/**
 
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: |
-            Test Report (Browser => ${{ matrix.browser }}, Mobile View => ${{ matrix.mobileMode }})
+          name: Test Report (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
           path: target/surefire-reports/**
