@@ -19,7 +19,6 @@ jobs:
     env:
       mobileViewRes: '500x900'
       desktopViewRes: '1920x1080'
-      DISPLAY_NUM: $((100 + $(echo "${{ github.job }}" | cksum | cut -f1 -d' ' ) % 50))
 
     steps:
       - name: Checkout code
@@ -50,13 +49,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xvfb ffmpeg
 
+      - name: Set unique DISPLAY_NUM
+        run: |
+          # Generate a pseudo-random number based on workflow run ID and job name
+          DISPLAY_NUM=$((100 + $(echo "${{ github.run_id }}${{ github.job }}" | cksum | cut -f1 -d' ') % 200))
+          echo "DISPLAY_NUM=$DISPLAY_NUM" >> $GITHUB_ENV
+          echo "Generated DISPLAY_NUM: $DISPLAY_NUM"
+
       - name: Start virtual display
         if: ${{ always() && matrix.headlessMode == false }}
         run: |
           if [ "${{ matrix.mobileMode }}" = "true" ]; then
-            RESOLUTION="${mobileViewRes}x24"
+            RESOLUTION=${mobileViewRes}x24
           else
-            RESOLUTION="${desktopViewRes}x24"
+            RESOLUTION=${desktopViewRes}x24
           fi
           
           Xvfb :${DISPLAY_NUM} -screen 0 $RESOLUTION &
@@ -66,9 +72,9 @@ jobs:
         if: ${{ always() && matrix.headlessMode == false }}
         run: |
           if [ "${{ matrix.mobileMode }}" = "true" ]; then
-            RESOLUTION="${mobileViewRes}"
+            RESOLUTION=${mobileViewRes}
           else
-            RESOLUTION="${desktopViewRes}"
+            RESOLUTION=${desktopViewRes}
           fi
           
           ffmpeg -video_size $RESOLUTION \
