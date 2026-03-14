@@ -16,6 +16,10 @@ jobs:
         mobileMode: [true, false]
         headlessMode: [false]
 
+    env:
+      mobileViewRes: '500x900'
+      desktopViewRes: '1920x1080'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -48,13 +52,25 @@ jobs:
       - name: Start virtual display
         if: ${{ always() && matrix.headlessMode == false }}
         run: |
-          Xvfb :99 -screen 0 1920x1080x24 &
+          if [ "${{ matrix.mobileMode }}" = "true" ]; then
+            RESOLUTION="${mobileViewRes}x24"
+          else
+            RESOLUTION="${desktopViewRes}x24"
+          fi
+          
+          Xvfb :99 -screen 0 $RESOLUTION &
           echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Start video recording
         if: ${{ always() && matrix.headlessMode == false }}
         run: |
-          ffmpeg -video_size 1920x1080 \
+          if [ "${{ matrix.mobileMode }}" = "true" ]; then
+            RESOLUTION="${mobileViewRes}"
+          else
+            RESOLUTION="${desktopViewRes}"
+          fi
+          
+          ffmpeg -video_size $RESOLUTION \
           -framerate 25 \
           -f x11grab \
           -i :99 \
