@@ -87,7 +87,7 @@ jobs:
       - name: Run TestNG Tests
         run: |
           mvn test -DsuiteXmlFile=suites/MainTestSuite.xml \
-          -Dbrowser='${{ matrix.browser }}' -Dmobile='${{ matrix.mobileMode }}' -DheadlessMode='${{ matrix.headlessMode }}'
+          -Dbrowser='${{ matrix.browser }}' -DmobileMode='${{ matrix.mobileMode }}' -DheadlessMode='${{ matrix.headlessMode }}'
         working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
         id: run-tests
 
