@@ -1,24 +1,24 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
 
 name: Java CI with Maven
 
 on:
-  # push:
-  #   branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  # schedule:
-  #   - cron: '0 0 * * *'
 
 jobs:
   build:
+    name: Test on (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome]
+        mobileMode: [true, false]
+        headlessMode: [false]
+
+    env:
+      mobileViewRes: '500x900'
+      desktopViewRes: '1920x1080'
 
     steps:
       - name: Checkout code
@@ -44,52 +44,75 @@ jobs:
           done < .env
 
       - name: Install tools
+        if: ${{ always() && matrix.headlessMode == false }}
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb ffmpeg
 
-      - name: Start virtual display
+      - name: Set unique DISPLAY_NUM
         run: |
-          Xvfb :99 -screen 0 1920x1080x24 &
-          echo "DISPLAY=:99" >> $GITHUB_ENV
+          # Generate a pseudo-random number based on workflow run ID and job name
+          DISPLAY_NUM=$((100 + $(echo "${{ github.run_id }}${{ github.job }}" | cksum | cut -f1 -d' ') % 200))
+          echo "DISPLAY_NUM=$DISPLAY_NUM" >> $GITHUB_ENV
+          echo "Generated DISPLAY_NUM: $DISPLAY_NUM"
+
+      - name: Start virtual display
+        if: ${{ always() && matrix.headlessMode == false }}
+        run: |
+          if [ "${{ matrix.mobileMode }}" = "true" ]; then
+            RESOLUTION=${mobileViewRes}x24
+          else
+            RESOLUTION=${desktopViewRes}x24
+          fi
+          
+          Xvfb :${DISPLAY_NUM} -screen 0 $RESOLUTION &
+          echo "DISPLAY=:${DISPLAY_NUM}" >> $GITHUB_ENV
 
       - name: Start video recording
+        if: ${{ always() && matrix.headlessMode == false }}
         run: |
-          ffmpeg -video_size 1920x1080 \
+          if [ "${{ matrix.mobileMode }}" = "true" ]; then
+            RESOLUTION=${mobileViewRes}
+          else
+            RESOLUTION=${desktopViewRes}
+          fi
+          
+          ffmpeg -video_size $RESOLUTION \
           -framerate 25 \
           -f x11grab \
-          -i :99 \
+          -i :${DISPLAY_NUM} \
           test_recording.mp4 &
           echo $! > ffmpeg.pid
 
       - name: Run TestNG Tests
         run: |
-          mvn test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser='chrome' -DheadlessMode='false' -Dmobile='false' -DincludeAudio='false'
+          mvn test -DsuiteXmlFile=suites/MainTestSuite.xml \
+          -Dbrowser='${{ matrix.browser }}' -DmobileMode='${{ matrix.mobileMode }}' -DheadlessMode='${{ matrix.headlessMode }}'
         working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
         id: run-tests
 
       - name: Stop recording
-        if: always()
+        if: ${{ always() && matrix.headlessMode == false }}
         run: |
           kill $(cat ffmpeg.pid)
 
       - name: Upload recording
-        if: always()
+        if: ${{ always() && matrix.headlessMode == false }}
         uses: actions/upload-artifact@v4
         with:
-          name: Test Recording Video
+          name: Test Recording Video (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
           path: test_recording.mp4
 
       - name: Upload Screenshots of the Failed Tests
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: Screenshots of failed tests
+          name: Screenshots of failed tests (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
           path: src/main/screenshots/**
 
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Test Report
+          name: Test Report (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
           path: target/surefire-reports/**

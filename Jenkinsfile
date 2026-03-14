@@ -68,8 +68,7 @@ pipeline {
                 trap cleanup EXIT
                 
                 mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml \
-                               -Dbrowser=${browser} -DheadlessMode=${headlessMode} \
-                               -Dmobile=${mobile} -DincludeAudio=${includeAudio}
+                -Dbrowser=${browser} -DheadlessMode=${headlessMode} -Dmobile=${mobile}
                                
                 TEST_EXIT_CODE=$?
                 echo "Maven exited with $TEST_EXIT_CODE"
