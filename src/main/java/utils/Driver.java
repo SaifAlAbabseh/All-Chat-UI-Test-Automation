@@ -21,7 +21,8 @@ public class Driver {
 
     private static WebDriver driver;
 
-    public Driver(String browserName, boolean headlessMode, boolean mobileMode) throws MalformedURLException {
+    public Driver(String browserName, boolean mobileMode) throws MalformedURLException {
+        boolean headlessMode = Boolean.parseBoolean(System.getProperty("headlessMode"));
         String windowSizeInner = (mobileMode) ? "--window-size=500,900" : "--window-size=1920,1080";
         if(browserName.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().clearDriverCache();

@@ -1,24 +1,20 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
 
 name: Java CI with Maven
 
 on:
-  # push:
-  #   branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  # schedule:
-  #   - cron: '0 0 * * *'
 
 jobs:
   build:
+    name: Test on (Browser => ${{ matrix.browser }}, Mobile View => ${{ matrix.mobileMode }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome]
+        mobileMode: [true, false]
+        headlessMode: [true]
 
     steps:
       - name: Checkout code
@@ -44,16 +40,19 @@ jobs:
           done < .env
 
       - name: Install tools
+        if: ${{ always() && env.headlessMode == 'false' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb ffmpeg
 
       - name: Start virtual display
+        if: ${{ always() && env.headlessMode == 'false' }}
         run: |
           Xvfb :99 -screen 0 1920x1080x24 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Start video recording
+        if: ${{ always() && env.headlessMode == 'false' }}
         run: |
           ffmpeg -video_size 1920x1080 \
           -framerate 25 \
@@ -64,17 +63,18 @@ jobs:
 
       - name: Run TestNG Tests
         run: |
-          mvn test -DsuiteXmlFile=suites/MainTestSuite.xml -Dbrowser='chrome' -DheadlessMode='false' -Dmobile='false' -DincludeAudio='false'
+          mvn test -DsuiteXmlFile=suites/MainTestSuite.xml \
+          -Dbrowser=${{ matrix.browser }} -Dmobile=${{ matrix.mobileMode }} -DheadlessMode=${{ matrix.headlessMode }}
         working-directory: /home/runner/work/All-Chat-UI-Test-Automation/All-Chat-UI-Test-Automation
         id: run-tests
 
       - name: Stop recording
-        if: always()
+        if: ${{ always() && env.headlessMode == 'false' }}
         run: |
           kill $(cat ffmpeg.pid)
 
       - name: Upload recording
-        if: always()
+        if: ${{ always() && env.headlessMode == 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: Test Recording Video

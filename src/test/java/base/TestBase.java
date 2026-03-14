@@ -17,19 +17,20 @@ import java.util.Properties;
 public class TestBase {
 
     protected final Page page = new Page();
+    private final boolean mobileMode = Boolean.parseBoolean(System.getProperty("mobileMode"));
+    private final String browser = System.getProperty("browser");
 
-    @Parameters({"browser", "headlessMode", "mobile", "includeAudio"})
     @BeforeClass(description = "Initialize the web driver, load the test data, and start recording a video")
-    public void setUp(String browser, boolean headlessMode, boolean mobile, boolean includeAudio) throws MalformedURLException {
-        new Driver(browser, headlessMode, mobile);
+    public void setUp() throws MalformedURLException {
+        new Driver(browser, mobileMode);
         Driver.printWindowSize();
-//        ScreenActions.startVideoRecording(this.getClass().getName(), includeAudio);
+//        ScreenActions.startVideoRecording(this.getClass().getName(), false);
     }
 
-    @Parameters({"browser", "mobile"})
     @AfterMethod(description = "Take a screenshot for every failed test case")
-    public void createScreenshotOnFailure(ITestResult result, Method method, String browser, boolean mobile) {
+    public void createScreenshotOnFailure(ITestResult result, Method method) {
         if(!result.isSuccess()) {
+            boolean mobile = Boolean.parseBoolean(System.getProperty("mobileMode"));
             String whichPlatform = (mobile)?"mobile view":"desktop view";
             ScreenActions.takeScreenshot(browser, whichPlatform, method.getName());
         }
