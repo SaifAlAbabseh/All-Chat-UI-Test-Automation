@@ -7,6 +7,6 @@ import io.cucumber.testng.CucumberOptions;
         features = "classpath:features",
         glue = {"stepdefinitions", "hooks"},
         plugin = {"pretty", "html:target/cucumber-report.html", "json:target/cucumber-report.json"},
-        tags = "@login"
+        tags = "@regression"
 )
 public class RegressionTest extends AbstractTestNGCucumberTests {}
