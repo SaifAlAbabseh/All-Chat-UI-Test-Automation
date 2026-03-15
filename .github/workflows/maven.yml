@@ -114,5 +114,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Test Report (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
-          path: target/surefire-reports/**
+          name: Cucumber Test Report (Browser ${{ matrix.browser }}, Mobile View ${{ matrix.mobileMode }})
+          path: target/cucumber-report.html

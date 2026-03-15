@@ -1,5 +1,6 @@
 package helpers;
 
+import io.cucumber.datatable.DataTable;
 import jakarta.mail.Message;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -8,10 +9,11 @@ import org.testng.Assert;
 import pages.MainPage;
 import utils.Driver;
 import utils.EmailReader;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 public class MainHelpers {
 
@@ -66,5 +68,10 @@ public class MainHelpers {
         catch(Exception e) {
             System.err.println("Could not read emails \n" + e.getMessage());
         }
+    }
+
+    public static String getDataTableValueAsString(DataTable table, int row, String header) {
+        List<Map<String, String>> data = table.asMaps(String.class, String.class);
+        return data.get(row).get(header);
     }
 }

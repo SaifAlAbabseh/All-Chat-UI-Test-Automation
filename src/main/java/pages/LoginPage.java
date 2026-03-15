@@ -1,12 +1,7 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.Driver;
 import utils.Page;
-
-import java.time.Duration;
 
 public class LoginPage extends Page {
 
@@ -17,10 +12,6 @@ public class LoginPage extends Page {
                 signupSwitcherButton = By.xpath("//button[contains(., 'Create an account')]"),
                 loginSwitcherButton = By.xpath("//button[contains(., '< Go back to login')]"),
                 signupEmailField = By.id("signupemail_inputfield");
-
-    public void navigateToLoginPage(String URL) {
-        visit(URL);
-    }
 
     public String getLoginPageTitle() {
         return getPageTitle();

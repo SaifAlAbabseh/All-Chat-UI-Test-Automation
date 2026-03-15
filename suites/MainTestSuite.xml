@@ -2,7 +2,7 @@
 <suite name="All Chat Test Suite">
     <test name="All Chat Test">
         <classes>
-            <class name="tests.MainTest" />
+            <class name="runners.RegressionTest" />
         </classes>
     </test>
 </suite>

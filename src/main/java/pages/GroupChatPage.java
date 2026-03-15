@@ -1,12 +1,8 @@
 package pages;
 import helpers.MainHelpers;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.Driver;
+import org.testng.Assert;
 import utils.Page;
-
-import java.time.Duration;
 
 public class GroupChatPage extends Page {
 
@@ -45,17 +41,15 @@ public class GroupChatPage extends Page {
     }
 
     public void removeFriendFromGroup(String friendUsername) {
-        clickOnGroupSettingsButton();
         try {
             findElementBy(By.xpath(String.format(kickButton, friendUsername))).click();
         }
         catch(Exception e) {
-            System.err.println("Could not find the newly added friend to group.");
+            Assert.fail("Could not find the newly added friend to group.");
         }
     }
 
     public void destroyGroup() {
-        clickOnGroupSettingsButton();
         findElementBy(destroyGroupButton).click();
     }
 }

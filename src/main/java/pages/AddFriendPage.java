@@ -1,13 +1,7 @@
 package pages;
 
-import helpers.MainHelpers;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.Driver;
 import utils.Page;
-
-import java.time.Duration;
 
 public class AddFriendPage extends Page {
 

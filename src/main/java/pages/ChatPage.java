@@ -5,7 +5,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import utils.Page;
-
 import java.util.List;
 
 public class ChatPage extends Page {

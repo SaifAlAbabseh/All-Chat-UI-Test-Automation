@@ -2,7 +2,6 @@ package utils;
 
 import jakarta.mail.*;
 import jakarta.mail.search.SubjectTerm;
-
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
