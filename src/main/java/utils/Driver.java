@@ -1,8 +1,6 @@
 package utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
-import io.github.bonigarcia.wdm.managers.OperaDriverManager;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,53 +11,14 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
-
 public class Driver {
 
     private static WebDriver driver;
 
-    public Driver(String browserName, boolean mobileMode) throws MalformedURLException {
-        boolean headlessMode = Boolean.parseBoolean(System.getProperty("headlessMode"));
-        String windowSizeInner = (mobileMode) ? "--window-size=500,900" : "--window-size=1920,1080";
-        if(browserName.equalsIgnoreCase("chrome")) {
-            WebDriverManager.chromedriver().clearDriverCache();
-            WebDriverManager.chromedriver().setup();
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            if(headlessMode) options.addArguments("--headless");
-            options.addArguments(windowSizeInner);
-            driver = new ChromeDriver(options);
-        }
-        else if(browserName.equalsIgnoreCase("firefox")) {
-            WebDriverManager.firefoxdriver().clearDriverCache();
-            WebDriverManager.firefoxdriver().setup();
-            FirefoxOptions options = new FirefoxOptions();
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            if(headlessMode) options.addArguments("--headless");
-            options.addArguments(windowSizeInner);
-            driver = new FirefoxDriver(options);
-        }
-        else if(browserName.equalsIgnoreCase("edge")) {
-            WebDriverManager.edgedriver().clearDriverCache();
-            WebDriverManager.edgedriver().setup();
-            EdgeOptions options = new EdgeOptions();
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            if(headlessMode) options.addArguments("--headless");
-            options.addArguments(windowSizeInner);
-            driver = new EdgeDriver(options);
-        }
-        Dimension windowSize = (mobileMode)?new Dimension(500, 900):new Dimension(1920, 1080);
-        driver.manage().window().setSize(windowSize);
-    }
     public static WebDriver getDriver() {
         return driver;
     }
+
     public static void printWindowSize() {
         // Using Selenium API
         Dimension size = driver.manage().window().getSize();
@@ -70,5 +29,55 @@ public class Driver {
         Long width = (Long) js.executeScript("return window.innerWidth;");
         Long height = (Long) js.executeScript("return window.innerHeight;");
         System.out.println("Inner viewport size via JS: " + width + "x" + height);
+    }
+
+    public static void initDriver() {
+        if(driver != null) {
+            System.out.println("You cannot re-initialize the webdriver as it is already initialized.");
+            return;
+        }
+
+        final String windowSizeInner = (DriverManager.mobileMode) ? "--window-size=500,900" : "--window-size=1920,1080";
+        final Dimension windowSize = (DriverManager.mobileMode) ? new Dimension(500, 900) : new Dimension(1920, 1080);
+
+        if(DriverManager.browserName.equalsIgnoreCase("chrome")) {
+            WebDriverManager.chromedriver().clearDriverCache();
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            if(DriverManager.headlessMode) options.addArguments("--headless");
+            options.addArguments(windowSizeInner);
+            driver = new ChromeDriver(options);
+        }
+        else if(DriverManager.browserName.equalsIgnoreCase("firefox")) {
+            WebDriverManager.firefoxdriver().clearDriverCache();
+            WebDriverManager.firefoxdriver().setup();
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            if(DriverManager.headlessMode) options.addArguments("--headless");
+            options.addArguments(windowSizeInner);
+            driver = new FirefoxDriver(options);
+        }
+        else if(DriverManager.browserName.equalsIgnoreCase("edge")) {
+            WebDriverManager.edgedriver().clearDriverCache();
+            WebDriverManager.edgedriver().setup();
+            EdgeOptions options = new EdgeOptions();
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            if(DriverManager.headlessMode) options.addArguments("--headless");
+            options.addArguments(windowSizeInner);
+            driver = new EdgeDriver(options);
+        }
+
+        if(driver != null) driver.manage().window().setSize(windowSize);
+    }
+
+    public static void quitDriver() {
+        if(driver != null) {
+            driver.quit();
+            driver = null;
+        }
     }
 }

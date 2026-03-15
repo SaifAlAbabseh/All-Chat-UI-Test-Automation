@@ -16,19 +16,21 @@ public class ScreenActions {
     public static void takeScreenshot(String browserName, String whichPlatform, String testCaseName) {
         File file = ((TakesScreenshot)Driver.getDriver()).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(file, new File("src/main/screenshots/" + browserName + "-" + whichPlatform + "-" + testCaseName + ".png"));
+            String fileName = String.format("src/main/screenshots/%s-%s-%s.png", browserName, whichPlatform, testCaseName);
+            FileUtils.copyFile(file, new File(fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Could not save screenshot, ERROR: " + e.getMessage());
         }
     }
 
-    public static void startVideoRecording(String fileName, boolean includeAudio) {
+    public static void startVideoRecording(boolean includeAudio) {
         String videoPath = "src/main/videos";
+        String fileName = "test";
         try {
             recorder = new ATUTestRecorder(videoPath, fileName, includeAudio);
             recorder.start();
         } catch (ATUTestRecorderException e) {
-            e.printStackTrace();
+            System.err.println("Could not start video recording, ERROR: " + e.getMessage());
         }
     }
 
@@ -36,7 +38,7 @@ public class ScreenActions {
         try {
             recorder.stop();
         } catch (ATUTestRecorderException e) {
-            e.printStackTrace();
+            System.err.println("Could not stop video recording, ERROR: " + e.getMessage());
         }
     }
 }

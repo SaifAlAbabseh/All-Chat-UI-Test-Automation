@@ -6,9 +6,6 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import utils.Page;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class ProfilePage extends Page {
 
     private final By changePictureButton = By.xpath("//a[@href='Edit_Profile/']"),

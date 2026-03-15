@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import pages.LoginPage;
 import java.time.Duration;
 import java.util.List;
 
@@ -31,5 +31,10 @@ public class Page {
     public void goBack() {
         By backButton = By.xpath("//a[img[@alt='Back Button']]");
         findElementBy(backButton).click();
+    }
+
+    public LoginPage navigateToLoginPage(String URL) {
+        visit(URL);
+        return new LoginPage();
     }
 }

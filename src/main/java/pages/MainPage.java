@@ -112,12 +112,12 @@ public class MainPage extends Page {
 
     public void waitForLoading() {
         try {
-            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(loadingBox));
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(2)).until(ExpectedConditions.visibilityOfElementLocated(loadingBox));
+            new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(6)).until(ExpectedConditions.invisibilityOfElementLocated(loadingBox));
         }
         catch(Exception e) {
             System.err.println("Could not see the loading container.. maybe it is as expected.");
         }
-        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.invisibilityOfElementLocated(loadingBox));
     }
 
     public void clickOnNotificationsButton() {
