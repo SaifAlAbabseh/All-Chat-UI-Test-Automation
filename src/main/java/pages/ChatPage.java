@@ -11,8 +11,8 @@ public class ChatPage extends Page {
 
     private final By messageField = By.id("messageField"),
             sendMessageButton = By.id("sendButton"),
-            messagesElements = By.xpath("//tr[td[@class='messageDate']]"),
-            messagesRowsElements = By.xpath("//td[@colspan=2]/p");
+            messagesElements = By.cssSelector("div.message-container"),
+            messagesRowsElements = By.cssSelector("div.message-container > div.message-text");
 
     public void typeMessage(String message) {
         findElementBy(messageField).sendKeys(message);

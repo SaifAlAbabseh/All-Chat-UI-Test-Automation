@@ -29,11 +29,11 @@ public class MainPage extends Page {
                 createGroupNameField = By.name("group_name"),
                 createGroupPictureField = By.id("picField"),
                 createGroupSubmitButton = By.name("create_group_button"),
-                groupEnterButton = By.xpath("//tr/td/a[text()='Enter']"),
+                groupEnterButton = By.xpath("//div[@class='groupRow']/a[starts-with(@href, 'Group/?group_id=')]"),
                 mobileViewMenuClosebutton = By.id("exit_menu_button");
 
     private final String friendRowElement = "//table//tr[td[1]/h4[contains(., '%s')]]",
-                        groupRowByName = "//tbody[@id='groupsInnerData']/tr/td/h2[text()='%s']";
+                        groupRowByName = "//div[@class='groupRow']/h2[text()='%s']";
 
     public WebElement getAddNewFriendLink() {
         return findElementBy(addNewFriendLink);
@@ -176,7 +176,7 @@ public class MainPage extends Page {
     }
 
     public GroupChatPage clickEnterForGroup(String groupName) {
-        By groupRow = By.xpath(String.format("//tbody[@id='groupsInnerData']/tr[td/h2[text()='%s']]", groupName));
+        By groupRow = By.xpath(String.format("//div[@id='groupsInnerData']/div[h2[text()='%s']]", groupName));
         findElementBy(groupRow).findElement(groupEnterButton).click();
         return new GroupChatPage();
     }

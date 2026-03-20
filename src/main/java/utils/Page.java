@@ -21,6 +21,7 @@ public class Page {
     }
 
     public List<WebElement> findElementsBy(By elementsSearchCriteria) {
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(elementsSearchCriteria));
         return Driver.getDriver().findElements(elementsSearchCriteria);
     }
 

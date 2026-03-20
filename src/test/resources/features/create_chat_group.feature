@@ -12,7 +12,7 @@ Feature: Create Chat Group
     And clicks login
     Then user should be navigated to the main page
       | username           |
-      | AC_USERNAME |
+      | AC_USERNAME        |
 
   Scenario: User creates new chat group
     When user clicks on create group button

@@ -50,6 +50,7 @@ public class GroupChatPage extends Page {
     }
 
     public void destroyGroup() {
+        MainHelpers.waitFor(2);
         findElementBy(destroyGroupButton).click();
     }
 }
