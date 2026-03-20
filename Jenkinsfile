@@ -111,7 +111,7 @@ pipeline {
                 def cucumberJsonReport = readFile('target/cucumber-report.json')
                 def jsonRaw = new JsonSlurper().parseText(cucumberJsonReport)
                 def scenarios = jsonRaw.collectMany { feature ->
-                    feature.elements
+                    feature.elements.findAll { it.type == 'scenario' }
                 }
                 def TOTAL_TESTS = scenarios.size()
                 def PASSED_TESTS = scenarios.count { s -> s.steps.every { it.result.status == 'passed' } }
