@@ -26,3 +26,13 @@ Feature: Create Chat Group
     And user should see the new created group in the groups box
       | name     |
       | testAuto |
+
+  Scenario: User admin deletes group
+    When user clicks on chat button for group
+      | name     |
+      | testAuto |
+    When user admin clicks on group settings button
+    And clicks on delete group button
+    Then user admin do not see the group anymore
+      | name     |
+      | testAuto |
