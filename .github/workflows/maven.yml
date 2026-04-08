@@ -15,7 +15,7 @@ jobs:
       matrix:
         browser: [chrome]
         mobileMode: [true, false]
-        headlessMode: [false]
+        headlessMode: [true]
 
     env:
       mobileViewRes: '500x900'
