@@ -22,8 +22,8 @@ public class BaseHooks {
     @After(order = 1)
     public static void createScreenshotOnFailure(Scenario scenario) {
         if(scenario.isFailed()) {
-            String whichPlatform = DriverManager.mobileMode ? "mobile view" : "desktop view";
-            ScreenActions.takeScreenshot(DriverManager.browserName, whichPlatform, scenario.getName());
+            String whichPlatform = (Boolean)DriverManager.driverConfig.get()[0] ? "mobile view" : "desktop view";
+            ScreenActions.takeScreenshot((String)DriverManager.driverConfig.get()[1], whichPlatform, scenario.getName());
         }
     }
 

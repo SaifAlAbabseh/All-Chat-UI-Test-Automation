@@ -13,71 +13,66 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 
 public class Driver {
 
-    private static WebDriver driver;
+    private static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
-        return driver;
+        return driver.get();
     }
 
     public static void printWindowSize() {
         // Using Selenium API
-        Dimension size = driver.manage().window().getSize();
+        Dimension size = driver.get().manage().window().getSize();
         System.out.println("Window size via Selenium API: " + size.width + "x" + size.height);
 
         // Using JavaScript (actual viewport)
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) driver.get();
         Long width = (Long) js.executeScript("return window.innerWidth;");
         Long height = (Long) js.executeScript("return window.innerHeight;");
         System.out.println("Inner viewport size via JS: " + width + "x" + height);
     }
 
     public static void initDriver() {
-        if(driver != null) {
-            System.out.println("You cannot re-initialize the webdriver as it is already initialized.");
-            return;
-        }
 
-        final String windowSizeInner = (DriverManager.mobileMode) ? "--window-size=500,900" : "--window-size=1920,1080";
-        final Dimension windowSize = (DriverManager.mobileMode) ? new Dimension(500, 900) : new Dimension(1920, 1080);
+        final Object[] driverConfig = DriverManager.driverConfig.get();
 
-        if(DriverManager.browserName.equalsIgnoreCase("chrome")) {
-            WebDriverManager.chromedriver().clearDriverCache();
+        final String windowSizeInner = (Boolean)driverConfig[0] ? "--window-size=500,900" : "--window-size=1920,1080";
+        final Dimension windowSize = (Boolean)driverConfig[0] ? new Dimension(500, 900) : new Dimension(1920, 1080);
+        final String browserName = (String)driverConfig[1];
+        final boolean headlessMode = (Boolean)driverConfig[2];
+
+        if(browserName.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
-            if(DriverManager.headlessMode) options.addArguments("--headless");
+            if(headlessMode) options.addArguments("--headless");
             options.addArguments(windowSizeInner);
-            driver = new ChromeDriver(options);
+            driver.set(new ChromeDriver(options));
         }
-        else if(DriverManager.browserName.equalsIgnoreCase("firefox")) {
-            WebDriverManager.firefoxdriver().clearDriverCache();
+        else if(browserName.equalsIgnoreCase("firefox")) {
             WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
-            if(DriverManager.headlessMode) options.addArguments("--headless");
+            if(headlessMode) options.addArguments("--headless");
             options.addArguments(windowSizeInner);
-            driver = new FirefoxDriver(options);
+            driver.set(new FirefoxDriver(options));
         }
-        else if(DriverManager.browserName.equalsIgnoreCase("edge")) {
-            WebDriverManager.edgedriver().clearDriverCache();
+        else if(browserName.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver().setup();
             EdgeOptions options = new EdgeOptions();
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
-            if(DriverManager.headlessMode) options.addArguments("--headless");
+            if(headlessMode) options.addArguments("--headless");
             options.addArguments(windowSizeInner);
-            driver = new EdgeDriver(options);
+            driver.set(new EdgeDriver(options));
         }
 
-        if(driver != null) driver.manage().window().setSize(windowSize);
+        driver.get().manage().window().setSize(windowSize);
     }
 
     public static void quitDriver() {
-        if(driver != null) {
-            driver.quit();
-            driver = null;
-        }
+        driver.get().quit();
+        driver.remove();
     }
 }
