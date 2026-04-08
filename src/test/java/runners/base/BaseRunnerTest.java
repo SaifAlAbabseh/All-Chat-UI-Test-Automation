@@ -15,7 +15,7 @@ import java.io.File;
         glue = {"stepdefinitions", "hooks"},
         plugin = {"pretty", "html:target/cucumber-report.html", "json:target/cucumber-report.json"}
 )
-public class BaseRunnerTest extends AbstractTestNGCucumberTests {
+public abstract class BaseRunnerTest extends AbstractTestNGCucumberTests {
 
     @Parameters({"mobileMode", "browser", "headlessMode"})
     @BeforeTest
