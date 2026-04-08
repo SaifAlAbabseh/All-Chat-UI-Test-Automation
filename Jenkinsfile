@@ -23,8 +23,14 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                        url: 'https://github.com/SaifAlAbabseh/All-Chat-UI-Test-Automation.git'
+                script {
+                    checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: '*/main']],
+                            userRemoteConfigs: [[url: 'https://github.com/SaifAlAbabseh/All-Chat-UI-Test-Automation.git']],
+                            extensions: [[$class: 'WipeWorkspace']] // wipes the workspace
+                    ])
+                }
             }
         }
 
@@ -94,7 +100,7 @@ pipeline {
                         
                         trap cleanup EXIT
                         
-                        mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml \
+                        mvn clean install -U -DsuiteXmlFile=suites/MainTestSuite.xml \
                        -Dbrowser=\${browser} -DheadlessMode=\${headlessMode} -DmobileMode=\${mobileMode}
                                        
                         TEST_EXIT_CODE=\$?
@@ -104,7 +110,7 @@ pipeline {
                     }
                     else {
                         sh """
-                        mvn clean test -DsuiteXmlFile=suites/MainTestSuite.xml \
+                        mvn clean install -U -DsuiteXmlFile=suites/MainTestSuite.xml \
                         -Dbrowser=\${browser} -DheadlessMode=\${headlessMode} -DmobileMode=\${mobileMode}
                         """
                     }
