@@ -6,6 +6,6 @@ import runners.base.BaseRunnerTest;
 @CucumberOptions(
         features = "classpath:features/all_chat_project",
         glue = {"stepdefinitions.all_chat_project", "hooks"},
-        tags = "@regression"
+        tags = "@login"
 )
 public class RegressionTest extends BaseRunnerTest {}

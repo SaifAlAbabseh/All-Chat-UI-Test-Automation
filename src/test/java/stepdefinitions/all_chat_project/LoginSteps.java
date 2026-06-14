@@ -40,8 +40,18 @@ public class LoginSteps {
 
     @And("clicks login")
     public void clickLogin() {
-        mainPage = loginPage.clickOnLoginButton();
-        mainPage.waitForLoading();
+        loginPage.clickOnLoginButton();
+    }
+
+    @And("user verify login otp")
+    public void verifyLoginOTP(DataTable table) {
+        String expectedEmailSubject = EnvConfig.get(MainHelpers.getDataTableValueAsString(table, 0, "subject"));
+        String username = EnvConfig.get(MainHelpers.getDataTableValueAsString(table, 0, "email"));
+        String appPassword = EnvConfig.get(MainHelpers.getDataTableValueAsString(table, 0, "app_password"));
+        String otp = MainHelpers.getOTP(username, appPassword, expectedEmailSubject, 10);
+        if(otp == null) fail("Login OTP couldn't be fetched error.");
+        loginPage.typeOTP(otp);
+        mainPage = loginPage.confirmLoginOTP();
     }
 
     @Then("user should be navigated to the main page")

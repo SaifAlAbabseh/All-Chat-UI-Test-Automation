@@ -17,6 +17,7 @@ public class EmailReader {
         props.put("mail.store.protocol", "imaps");
         Session session = Session.getDefaultInstance(props);
         Store store = session.getStore("imaps");
+        Thread.sleep(5000);
         store.connect(host, username, appPassword);
 
         Folder inbox = store.getFolder("INBOX");

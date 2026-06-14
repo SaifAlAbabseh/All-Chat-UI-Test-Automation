@@ -11,7 +11,9 @@ public class LoginPage extends Page {
                loginButton = By.id("login_buttontag"),
                 signupSwitcherButton = By.xpath("//button[contains(., 'Create an account')]"),
                 loginSwitcherButton = By.xpath("//button[contains(., '< Go back to login')]"),
-                signupEmailField = By.id("signupemail_inputfield");
+                signupEmailField = By.id("signupemail_inputfield"),
+                otpField = By.cssSelector("input[name=verification_code_field]"),
+                submitOTPButton = By.cssSelector("input[name=login_verification_button]");
 
     public String getLoginPageTitle() {
         return getPageTitle();
@@ -45,8 +47,16 @@ public class LoginPage extends Page {
         findElementBy(loginSwitcherButton).click();
     }
 
-    public MainPage clickOnLoginButton() {
-        findElementBy(loginButton).click();
+    public void typeOTP(String otp) {
+        findElementBy(otpField).sendKeys(otp);
+    }
+
+    public MainPage confirmLoginOTP() {
+        findElementBy(submitOTPButton).click();
         return new MainPage();
+    }
+
+    public void clickOnLoginButton() {
+        findElementBy(loginButton).click();
     }
 }

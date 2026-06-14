@@ -14,6 +14,9 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainHelpers {
 
@@ -68,6 +71,43 @@ public class MainHelpers {
         catch(Exception e) {
             System.err.println("Could not read emails \n" + e.getMessage());
         }
+    }
+
+    public static String getOTP(String username, String appPassword, String subject, int timeoutSeconds) {
+        try {
+            Message message = EmailReader.waitForEmail(
+                    "imap.gmail.com",
+                    username,
+                    appPassword,
+                    subject,
+                    timeoutSeconds
+            );
+            String body = EmailReader.getFullEmailBody(message);
+            return extractOTP(body);
+        }
+        catch(Exception e) {
+            System.err.println("Could not read emails \n" + e.getMessage());
+        }
+        return null;
+    }
+
+    private static String extractOTP(String body) {
+        String[] splits1 = body.split("code below to login. ");
+        String[] splits2 = splits1[1].split(" If you didn't request this");
+        return splits2[0];
+    }
+
+    public static String generateRandomString(int stringLength) {
+        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random RANDOM = new Random();
+        StringBuilder result = new StringBuilder(stringLength);
+        int charactersLength = CHARACTERS.length();
+        for (int i = 0; i < stringLength; i++) {
+            int randomIndex = RANDOM.nextInt(charactersLength);
+            result.append(CHARACTERS.charAt(randomIndex));
+        }
+
+        return result.toString();
     }
 
     public static String getDataTableValueAsString(DataTable table, int row, String header) {
